@@ -251,6 +251,39 @@ body {
 .podium-bar-track { width: 60px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
 .podium-bar-fill { height: 100%; background: linear-gradient(90deg, #ff3e6c, #7c3aed); border-radius: 2px; }
 
+/* Abdul Kalam blessing */
+.kalam-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.kalam-img {
+  width: 100%;
+  max-width: 420px;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  display: block;
+}
+.kalam-quote {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  margin-top: 14px;
+  line-height: 1.6;
+  padding: 0 4px;
+}
+.kalam-attr {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
 /* Dominant winner banner */
 .dominant-banner {
   width: 100%;
@@ -358,6 +391,76 @@ body {
 
 .tier-back-row { width: 100%; display: flex; align-items: center; padding: 18px 0 4px; }
 
+/* ── LEADERBOARD ── */
+.lb-category-tabs {
+  width: 100%; display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.lb-tab {
+  padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  cursor: pointer; border: 1px solid var(--border); background: var(--card-bg);
+  color: var(--muted); transition: all 0.15s;
+}
+.lb-tab.active {
+  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
+  border-color: transparent; color: #fff;
+}
+
+.lb-list { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+
+.lb-entry {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px 16px;
+  display: flex; align-items: center; gap: 14px;
+}
+.lb-entry.top1 { border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.05); }
+.lb-entry.top2 { border-color: rgba(192,192,192,0.3); }
+.lb-entry.top3 { border-color: rgba(205,127,50,0.3); }
+
+.lb-rank { font-size: 20px; width: 32px; text-align: center; flex-shrink: 0; }
+.lb-thumb {
+  width: 48px; height: 48px; border-radius: 12px; overflow: hidden;
+  background: var(--surface); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.lb-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.lb-info { flex: 1; min-width: 0; }
+.lb-player { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+.lb-winner-name { font-size: 15px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lb-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.lb-wins-badge {
+  background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);
+  color: var(--gold); font-size: 10px; font-weight: 700;
+  padding: 3px 8px; border-radius: 8px; white-space: nowrap; flex-shrink: 0;
+}
+
+.lb-empty { width: 100%; text-align: center; padding: 40px 20px; color: var(--muted); }
+
+/* Submit row */
+.submit-row {
+  width: 100%; display: flex; gap: 10px; margin-bottom: 14px; margin-top: 4px;
+}
+.name-input {
+  flex: 1; background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 13px 16px; color: var(--text); font-size: 14px;
+  font-family: inherit; outline: none; transition: border-color 0.15s;
+}
+.name-input:focus { border-color: rgba(124,58,237,0.5); }
+.name-input::placeholder { color: var(--muted); }
+.submit-btn {
+  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
+  border: none; border-radius: 12px; padding: 13px 20px;
+  color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
+  white-space: nowrap; transition: opacity 0.15s;
+}
+.submit-btn:hover { opacity: 0.88; }
+
+.btn-small-clear {
+  background: transparent; border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 12px; color: var(--muted);
+  font-size: 11px; cursor: pointer; transition: all 0.15s;
+}
+.btn-small-clear:hover { border-color: #ff3e6c; color: #ff3e6c; }
+
 /* ── ANIMATIONS ── */
 @keyframes slideInRight {
   from { transform: translateX(100px) scale(0.94); opacity: 0; }
@@ -404,42 +507,18 @@ body {
   </div>
 
   <div class="section-label">Choose a category</div>
-  <div class="category-grid">
+  <div class="category-grid" style="grid-template-columns:1fr 1fr">
     <div class="cat-card" onclick="pickTier('heroines')">
       <div class="cat-badge badge-live">Live</div>
       <div class="cat-emoji">💃</div>
       <div class="cat-name">South Indian Heroines</div>
       <div class="cat-count">28 actresses</div>
     </div>
-    <div class="cat-card" onclick="pickTier('fincher')">
+    <div class="cat-card" onclick="pickTier('directors')" id="directors-cat-card">
       <div class="cat-badge badge-live">Live</div>
       <div class="cat-emoji">🎬</div>
-      <div class="cat-name">Fincher Films</div>
-      <div class="cat-count">8 films</div>
-    </div>
-    <div class="cat-card disabled">
-      <div class="cat-badge badge-soon">Soon</div>
-      <div class="cat-emoji">🏏</div>
-      <div class="cat-name">IPL Batters GOAT</div>
-      <div class="cat-count">Coming soon</div>
-    </div>
-    <div class="cat-card disabled">
-      <div class="cat-badge badge-soon">Soon</div>
-      <div class="cat-emoji">🎵</div>
-      <div class="cat-name">Kollywood Songs</div>
-      <div class="cat-count">Coming soon</div>
-    </div>
-    <div class="cat-card disabled">
-      <div class="cat-badge badge-soon">Soon</div>
-      <div class="cat-emoji">🎙️</div>
-      <div class="cat-name">Music Directors</div>
-      <div class="cat-count">Coming soon</div>
-    </div>
-    <div class="cat-card disabled">
-      <div class="cat-badge badge-soon">Soon</div>
-      <div class="cat-emoji">🏆</div>
-      <div class="cat-name">Test Cricket GOAT</div>
-      <div class="cat-count">Coming soon</div>
+      <div class="cat-name">Tamil Directors</div>
+      <div class="cat-count" id="directors-count">Loading...</div>
     </div>
   </div>
 
@@ -458,9 +537,9 @@ body {
       <div class="how-text">Last one standing is your all-time pick.</div>
     </div>
   </div>
-</div>
 
-<!-- ══════════════════ TIER PICKER ══════════════════ -->
+  <button class="btn-secondary" style="margin-top:16px;width:100%" onclick="showLeaderboardFromHome()">🏆 View Leaderboard</button>
+</div>
 <div id="tier-pick" class="screen">
   <div class="tier-back-row">
     <button class="back-btn" onclick="goHome()">←</button>
@@ -577,6 +656,14 @@ body {
     <div class="result-headline" id="result-headline">Your winner!</div>
   </div>
 
+  <!-- Abdul Kalam blessing -->
+  <div class="kalam-wrap">
+    <img class="kalam-img" src="1786306273553_image.png" alt="Dr. Abdul Kalam applauding" onerror="this.style.display='none'">
+    <div class="kalam-quote">"Thank you Youth of India, You truly are Visionary"</div>
+    <div class="kalam-attr">— Dr. A.P.J. Abdul Kalam</div>
+  </div>
+
+  <!-- Winner card -->
   <div class="winner-wrap">
     <div class="winner-crown">👑</div>
     <div class="winner-card">
@@ -591,39 +678,49 @@ body {
     </div>
   </div>
 
-  <!-- Dominant winner banner (shown only when applicable) -->
+  <!-- Dominant winner banner (only shown on 80%+ wins) -->
   <div class="dominant-banner" id="dominant-banner" style="display:none"></div>
-
-  <div class="stat-row">
-    <div class="stat-pill">
-      <div class="stat-number" id="stat-wins">0</div>
-      <div class="stat-label">Wins</div>
-    </div>
-    <div class="stat-pill">
-      <div class="stat-number" id="stat-rounds">0</div>
-      <div class="stat-label">Rounds</div>
-    </div>
-    <div class="stat-pill">
-      <div class="stat-number" id="stat-rarity">—</div>
-      <div class="stat-label">Pick</div>
-    </div>
-  </div>
-
-  <div class="section-label">Your full ranking</div>
-  <div class="podium-section" id="podium"></div>
 
   <!-- Chitraguptan sign-off banner -->
   <div class="chitraguptan-banner">
     <div class="chitraguptan-text">😈 Congrats, Chitraguptan has taken very good note, now let's meet in hell</div>
   </div>
 
-  <button class="btn-primary" onclick="shareResult()">📤 Share my result</button>
-  <button class="btn-secondary" onclick="playAgain()">🔄 Play again</button>
-  <button class="btn-secondary" onclick="goHome()">🏠 Try another category</button>
-
-  <!-- Teams ping footer -->
+  <!-- Teams ping footer — above buttons -->
   <div class="teams-footer">
     🏃 Thanks for prioritizing my game over your Planner Board. Now pls go before you get one more Teams Ping
+  </div>
+
+  <!-- Name submit row -->
+  <div class="submit-row">
+    <input class="name-input" id="player-name-input" type="text" placeholder="Enter your name to save result..." maxlength="20">
+    <button class="submit-btn" onclick="submitToLeaderboard()">Save</button>
+  </div>
+
+  <button class="btn-primary" onclick="shareResult()">📤 Share my result</button>
+  <button class="btn-secondary" onclick="showLeaderboard()">🏆 See Leaderboard</button>
+  <button class="btn-secondary" onclick="playAgain()">🔄 Play again</button>
+  <button class="btn-secondary" onclick="goHome()">🏠 Try another category</button>
+</div>
+
+<!-- ══════════════════ LEADERBOARD ══════════════════ -->
+<div id="leaderboard" class="screen">
+  <div class="game-header">
+    <button class="back-btn" onclick="show('result')">←</button>
+    <div class="game-title-wrap">
+      <div class="game-category">Friends Picks</div>
+      <div class="game-round-label">Leaderboard</div>
+    </div>
+    <button class="btn-small-clear" onclick="clearLeaderboard()">Clear</button>
+  </div>
+
+  <div class="lb-category-tabs" id="lb-tabs"></div>
+  <div class="lb-list" id="lb-list"></div>
+
+  <div class="lb-empty" id="lb-empty" style="display:none">
+    <div style="font-size:40px;margin-bottom:12px">🎮</div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:6px">No results yet</div>
+    <div style="font-size:12px;color:var(--muted)">Play a game and submit your result to see it here</div>
   </div>
 </div>
 
@@ -744,6 +841,55 @@ function showToast(commentary) {
 
 
 // ════════════════════════════════════════════
+//  TMDB
+// ════════════════════════════════════════════
+const TMDB_KEY  = '07c5c9efa2102d78d6f2197475f4c8d7';
+const TMDB_IMG  = 'https://image.tmdb.org/t/p/w500';
+const TMDB_BASE = 'https://api.themoviedb.org/3';
+
+// Tamil directors — TMDb person IDs confirmed
+// Fetched live so photos always up to date
+const TAMIL_DIRECTORS_RAW = [
+  { name: 'Mani Ratnam',         query: 'Mani Ratnam',         meta: 'Roja · Bombay · Ponniyin Selvan',  emoji: '🎥' },
+  { name: 'Shankar',             query: 'Shankar',             meta: 'Enthiran · 2.0 · Indian 2',        emoji: '🤖' },
+  { name: 'Lokesh Kanagaraj',    query: 'Lokesh Kanagaraj',    meta: 'Vikram · Kaithi · Leo',            emoji: '🔫' },
+  { name: 'Vetrimaaran',         query: 'Vetrimaaran',         meta: 'Vada Chennai · Aadukalam',         emoji: '🏆' },
+  { name: 'Pa. Ranjith',         query: 'Pa. Ranjith',         meta: 'Kabali · Kaala · Sarpatta',       emoji: '✊' },
+  { name: 'Selvaraghavan',       query: 'Selvaraghavan',       meta: 'Kadhal Kondein · Aayirathil',      emoji: '🌀' },
+  { name: 'Karthik Subbaraj',    query: 'Karthik Subbaraj',    meta: 'Jigarthanda · Mercury · Iraivi',   emoji: '🎭' },
+  { name: 'Gautham Menon',       query: 'Gautham Menon',       meta: 'Vinnaithaandi · Neethane',         emoji: '🌊' },
+  { name: 'AR Murugadoss',       query: 'A.R. Murugadoss',     meta: 'Ghajini · Thuppakki · Sarkar',     emoji: '💥' },
+  { name: 'Atlee',               query: 'Atlee Kumar',         meta: 'Theri · Mersal · Bigil',           emoji: '⚡' },
+  { name: 'Nithilan Swaminathan',query: 'Nithilan Swaminathan',meta: 'Maharaja · Kurangu Bommai',        emoji: '🎯' },
+  { name: 'Arun Matheswaran',    query: 'Arun Matheswaran',    meta: 'Rocky · Captain Miller',           emoji: '🔥' },
+];
+
+async function fetchDirectorPhoto(query) {
+  try {
+    const encoded = encodeURIComponent(query);
+    const res  = await fetch(`${TMDB_BASE}/search/person?api_key=${TMDB_KEY}&query=${encoded}`);
+    const data = await res.json();
+    const hit  = data.results && data.results[0];
+    return hit && hit.profile_path ? TMDB_IMG + hit.profile_path : null;
+  } catch { return null; }
+}
+
+async function buildDirectorsCategory() {
+  const items = [];
+  for (const d of TAMIL_DIRECTORS_RAW) {
+    const photo = await fetchDirectorPhoto(d.query);
+    items.push({ name: d.name, meta: d.meta, emoji: d.emoji, img: photo || '' });
+  }
+  CATEGORIES['directors'] = {
+    name: 'Tamil Directors',
+    emoji: '🎬',
+    items
+  };
+  const countEl = document.getElementById('directors-count');
+  if (countEl) countEl.textContent = `${items.length} directors`;
+}
+
+// ════════════════════════════════════════════
 //  DATA
 // ════════════════════════════════════════════
 const CATEGORIES = {
@@ -781,20 +927,7 @@ const CATEGORIES = {
       { name: 'Trisha',              meta: 'Tamil · Telugu',             emoji: '👸', img: 'Trisha.jfif'           },
     ]
   },
-  fincher: {
-    name: 'Fincher Films',
-    emoji: '🎬',
-    items: [
-      { name: 'Fight Club',                     meta: '1999 · 8.8 ★', emoji: '🥊', img: 'https://image.tmdb.org/t/p/w500/bptfVGEh1zX3ux8BpCkBad2bsqk.jpg' },
-      { name: 'Se7en',                           meta: '1995 · 8.6 ★', emoji: '📦', img: 'https://image.tmdb.org/t/p/w500/6yoghtyTpznpBik8EngEmJskVnS.jpg' },
-      { name: 'Gone Girl',                       meta: '2014 · 8.1 ★', emoji: '🔪', img: 'https://image.tmdb.org/t/p/w500/fSRb7vyIP8rQpL0I47P3qUsEKX3.jpg' },
-      { name: 'Zodiac',                          meta: '2007 · 7.7 ★', emoji: '🔍', img: 'https://image.tmdb.org/t/p/w500/m5cuDxRHEBGaqJCqINH3MQZBVy0.jpg' },
-      { name: 'The Social Network',              meta: '2010 · 7.8 ★', emoji: '💻', img: 'https://image.tmdb.org/t/p/w500/n0ybibhJtQ5icDqTp8eRytcIHso.jpg' },
-      { name: 'The Girl with the Dragon Tattoo', meta: '2011 · 7.8 ★', emoji: '🐉', img: 'https://image.tmdb.org/t/p/w500/ed4Cz2YoSfzWcHWLsNb5OhKYGgT.jpg' },
-      { name: 'The Killer',                      meta: '2023 · 7.0 ★', emoji: '🔫', img: 'https://image.tmdb.org/t/p/w500/e0sE9vkAKMBnOzzp87pBF9BQBHB.jpg' },
-      { name: 'Mank',                            meta: '2020 · 7.0 ★', emoji: '🎞️', img: 'https://image.tmdb.org/t/p/w500/4xwDe4piRaF6rFGBiH0P8pSMCNH.jpg' },
-    ]
-  }
+  directors: { name: 'Tamil Directors', emoji: '🎬', items: [] } // filled by buildDirectorsCategory()
 };
 
 // ════════════════════════════════════════════
@@ -994,14 +1127,9 @@ function showResult() {
   document.getElementById('winner-name').textContent = champion.name;
   document.getElementById('winner-sub').textContent  = `Survived ${championWins} challenge${championWins !== 1 ? 's' : ''} · ${tierName}`;
   document.getElementById('result-headline').textContent = `${champion.name} wins! 🏆`;
-  document.getElementById('stat-wins').textContent   = championWins;
-  document.getElementById('stat-rounds').textContent = round;
-
-  const rarityPct = Math.round((championWins / (total - 1)) * 100);
-  document.getElementById('stat-rarity').textContent =
-    rarityPct >= 80 ? '🔥 Rare' : rarityPct >= 50 ? '⚡ Bold' : '😊 Common';
 
   // Dominant banner — only if 80%+ wins
+  const rarityPct = Math.round((championWins / (total - 1)) * 100);
   const domBanner = document.getElementById('dominant-banner');
   if (rarityPct >= 80) {
     domBanner.textContent = COMMENTARY.dominant;
@@ -1009,48 +1137,169 @@ function showResult() {
   } else {
     domBanner.style.display = 'none';
   }
+}
 
-  // Podium
-  const ranked = [champion, ...[...defeated].reverse()];
-  const medals = ['🥇', '🥈', '🥉'];
-  const podium = document.getElementById('podium');
-  podium.innerHTML = '';
+// ════════════════════════════════════════════
+//  LEADERBOARD (localStorage)
+// ════════════════════════════════════════════
+const LB_KEY = 'thisorthat_leaderboard_v1';
 
-  ranked.forEach((item, i) => {
-    const pct = Math.max(8, Math.round(((ranked.length - i) / ranked.length) * 100));
-    const div = document.createElement('div');
-    div.className = 'podium-item fade-up';
-    div.style.animationDelay = (i * 0.04) + 's';
-    div.style.opacity = '0';
+function loadLB() {
+  try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; }
+  catch { return []; }
+}
 
-    const thumb = document.createElement('div');
-    thumb.className = 'podium-thumb';
-    if (i < 3) {
-      thumb.textContent = medals[i];
-    } else {
-      const tImg = document.createElement('img');
-      tImg.src = item.img; tImg.alt = item.name;
-      tImg.onerror = () => { thumb.textContent = item.emoji; };
-      thumb.appendChild(tImg);
-    }
+function saveLB(entries) {
+  localStorage.setItem(LB_KEY, JSON.stringify(entries));
+}
 
-    div.innerHTML = `<div class="podium-rank" style="color:${i < 3 ? '#f59e0b' : 'var(--muted)'}">${i+1}</div>`;
-    div.appendChild(thumb);
-    div.innerHTML += `
-      <div class="podium-info">
-        <div class="podium-name">${item.name}</div>
-        <div class="podium-sub">${item.meta}</div>
-      </div>
-      <div class="podium-bar-track"><div class="podium-bar-fill" style="width:${pct}%"></div></div>`;
-    podium.appendChild(div);
+function submitToLeaderboard() {
+  const nameInput = document.getElementById('player-name-input');
+  const name = (nameInput.value || '').trim();
+  if (!name) { nameInput.focus(); nameInput.style.borderColor='#ff3e6c'; return; }
+  nameInput.style.borderColor = '';
+
+  const entries = loadLB();
+  entries.unshift({
+    player:   name,
+    category: cat.name,
+    catKey:   catKey,
+    winner:   champion.name,
+    winnerImg: champion.img,
+    winnerEmoji: champion.emoji || '⭐',
+    wins:     championWins,
+    total:    total,
+    tier:     currentTier,
+    tierName: ({ 1:'Therndhedukkapatta Marumagals', 2:'Same Clan', 3:'Broad Mind Prospects' })[currentTier] || 'Full',
+    ts:       Date.now()
   });
+  // Keep last 100
+  if (entries.length > 100) entries.splice(100);
+  saveLB(entries);
+
+  nameInput.value = '';
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = '✅ Saved!';
+  btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+  setTimeout(() => {
+    btn.textContent = 'Save';
+    btn.style.background = '';
+  }, 2000);
+}
+
+function showLeaderboardFromHome() {
+  show('leaderboard');
+  // override back button to go home
+  document.querySelector('#leaderboard .back-btn').onclick = () => show('home');
+  renderLeaderboard();
+}
+
+function showLeaderboard() {
+  show('leaderboard');
+  document.querySelector('#leaderboard .back-btn').onclick = () => show('result');
+  renderLeaderboard();
+}
+
+
+function renderLeaderboard(filterKey) {
+  const entries = loadLB();
+  const tabs    = document.getElementById('lb-tabs');
+  const list    = document.getElementById('lb-list');
+  const empty   = document.getElementById('lb-empty');
+
+  // Build category tabs from existing entries
+  const cats = [...new Set(entries.map(e => e.catKey))];
+  const activeCat = filterKey || cats[0] || null;
+
+  tabs.innerHTML = '';
+  if (cats.length > 1) {
+    cats.forEach(k => {
+      const t = document.createElement('button');
+      t.className = 'lb-tab' + (k === activeCat ? ' active' : '');
+      t.textContent = CATEGORIES[k] ? CATEGORIES[k].name : k;
+      t.onclick = () => renderLeaderboard(k);
+      tabs.appendChild(t);
+    });
+  }
+
+  const filtered = activeCat ? entries.filter(e => e.catKey === activeCat) : entries;
+
+  if (!filtered.length) {
+    list.innerHTML = ''; empty.style.display = 'block'; return;
+  }
+  empty.style.display = 'none';
+
+  // Tally winner counts for this category
+  const tally = {};
+  filtered.forEach(e => {
+    if (!tally[e.winner]) tally[e.winner] = { count: 0, img: e.winnerImg, emoji: e.winnerEmoji };
+    tally[e.winner].count++;
+  });
+
+  // Sort by most picked
+  const sorted = Object.entries(tally).sort((a,b) => b[1].count - a[1].count);
+  const medals = ['🥇','🥈','🥉'];
+
+  // Top picks summary
+  let html = `<div class="section-label" style="margin-top:0;margin-bottom:10px">Most picked by the group</div>`;
+  sorted.slice(0, 5).forEach(([name, data], i) => {
+    const pct = Math.round((data.count / filtered.length) * 100);
+    html += `
+    <div class="lb-entry ${i===0?'top1':i===1?'top2':i===2?'top3':''}">
+      <div class="lb-rank">${medals[i] || i+1}</div>
+      <div class="lb-thumb">
+        ${data.img ? `<img src="${data.img}" alt="${name}" onerror="this.parentElement.textContent='${data.emoji}'">` : data.emoji}
+      </div>
+      <div class="lb-info">
+        <div class="lb-winner-name">${name}</div>
+        <div class="lb-meta">Picked by ${data.count} of ${filtered.length} player${filtered.length>1?'s':''}</div>
+      </div>
+      <div class="lb-wins-badge">${pct}%</div>
+    </div>`;
+  });
+
+  // Individual results
+  html += `<div class="section-label" style="margin-top:20px;margin-bottom:10px">Individual results</div>`;
+  filtered.forEach(e => {
+    const timeAgo = formatTimeAgo(e.ts);
+    html += `
+    <div class="lb-entry">
+      <div class="lb-thumb">
+        ${e.winnerImg ? `<img src="${e.winnerImg}" alt="${e.winner}" onerror="this.parentElement.textContent='${e.winnerEmoji}'">` : e.winnerEmoji}
+      </div>
+      <div class="lb-info">
+        <div class="lb-player">👤 ${e.player} · ${timeAgo}</div>
+        <div class="lb-winner-name">${e.winner}</div>
+        <div class="lb-meta">${e.tierName || ''} · ${e.wins} wins</div>
+      </div>
+    </div>`;
+  });
+
+  list.innerHTML = html;
+}
+
+function formatTimeAgo(ts) {
+  const diff = Date.now() - ts;
+  const m = Math.floor(diff / 60000);
+  if (m < 1)  return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h/24)}d ago`;
+}
+
+function clearLeaderboard() {
+  if (confirm('Clear all leaderboard results?')) {
+    localStorage.removeItem(LB_KEY);
+    renderLeaderboard();
+  }
 }
 
 // ════════════════════════════════════════════
 //  SHARE
 // ════════════════════════════════════════════
 function shareResult() {
-  const txt = `🏆 My This or That result — ${cat.name}\n👑 ${champion.name} beat ${championWins} challengers!\n\n${COMMENTARY.signoff}\n\nWhat's yours? #ThisOrThat`;
+  const txt = `🏆 My This or That result — ${cat.name}\n👑 ${champion.name} beat ${championWins} challengers!\n\n${COMMENTARY.signoff}\n\nPlay here: https://this-or-that-game-cine.netlify.app\n#ThisOrThat`;
   if (navigator.share) {
     navigator.share({ title: 'This or That', text: txt }).catch(() => {});
   } else if (navigator.clipboard) {
@@ -1060,6 +1309,13 @@ function shareResult() {
 }
 
 function playAgain() { pickTier(catKey); }
+
+// ════════════════════════════════════════════
+//  INIT — fetch directors on load
+// ════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  buildDirectorsCategory();
+});
 </script>
 </body>
 </html>
