@@ -219,18 +219,7 @@ body {
 .winner-name { font-size: 22px; font-weight: 900; color: #fff; }
 .winner-sub { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 3px; }
 
-/* Result Tamil toast */
-.result-tamil {
-  width: 100%;
-  background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(255,62,108,0.1));
-  border: 1px solid rgba(245,158,11,0.25);
-  border-radius: 14px;
-  padding: 14px 18px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-.result-tamil-quote { font-size: 15px; font-weight: 700; color: #fde68a; line-height: 1.5; }
-.result-tamil-attr { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
 
 .stat-row { width: 100%; display: flex; gap: 10px; margin-bottom: 22px; }
 .stat-pill {
@@ -262,6 +251,52 @@ body {
 .podium-bar-track { width: 60px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
 .podium-bar-fill { height: 100%; background: linear-gradient(90deg, #ff3e6c, #7c3aed); border-radius: 2px; }
 
+/* Dominant winner banner */
+.dominant-banner {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(255,62,108,0.1));
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fde68a;
+  line-height: 1.5;
+}
+
+/* Chitraguptan sign-off */
+.chitraguptan-banner {
+  width: 100%;
+  background: linear-gradient(135deg, #1a0a24, #240a1a);
+  border: 1px solid rgba(255,62,108,0.25);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.chitraguptan-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ff8fab;
+  line-height: 1.6;
+}
+
+/* Teams ping footer */
+.teams-footer {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
 .btn-primary {
   width: 100%; padding: 17px; border: none; border-radius: 15px;
   background: linear-gradient(135deg, #ff3e6c, #7c3aed);
@@ -276,6 +311,52 @@ body {
 }
 .btn-secondary:hover { background: var(--surface); }
 .share-nudge { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+
+/* ── TIER PICKER ── */
+#tier-pick { padding-top: 0; }
+
+.tier-header { width: 100%; padding: 36px 0 6px; text-align: center; }
+.tier-cat-emoji { font-size: 40px; margin-bottom: 10px; }
+.tier-cat-name { font-size: 22px; font-weight: 900; }
+.tier-cat-sub { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 1px; }
+
+.tier-grid { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+
+.tier-card {
+  width: 100%; background: var(--card-bg); border: 1.5px solid var(--border);
+  border-radius: 18px; padding: 20px 22px; cursor: pointer;
+  transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+  display: flex; align-items: center; gap: 18px; position: relative; overflow: hidden;
+}
+.tier-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+.tier-card:active { transform: scale(0.98); }
+
+.tier-card.t1 { border-color: rgba(255,62,108,0.3); }
+.tier-card.t1:hover { border-color: rgba(255,62,108,0.6); }
+.tier-card.t2 { border-color: rgba(124,58,237,0.3); }
+.tier-card.t2:hover { border-color: rgba(124,58,237,0.6); }
+.tier-card.t3 { border-color: rgba(245,158,11,0.3); }
+.tier-card.t3:hover { border-color: rgba(245,158,11,0.6); }
+
+.tier-glow {
+  position: absolute; top: 0; left: 0; width: 4px; height: 100%; border-radius: 18px 0 0 18px;
+}
+.t1 .tier-glow { background: linear-gradient(180deg, #ff3e6c, #ff8fab); }
+.t2 .tier-glow { background: linear-gradient(180deg, #7c3aed, #a78bfa); }
+.t3 .tier-glow { background: linear-gradient(180deg, #f59e0b, #fde68a); }
+
+.tier-emoji { font-size: 34px; flex-shrink: 0; }
+.tier-info { flex: 1; }
+.tier-name { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+.tier-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.tier-count {
+  font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; flex-shrink: 0;
+}
+.t1 .tier-count { background: rgba(255,62,108,0.12); color: #ff3e6c; border: 1px solid rgba(255,62,108,0.25); }
+.t2 .tier-count { background: rgba(124,58,237,0.12); color: #a78bfa; border: 1px solid rgba(124,58,237,0.25); }
+.t3 .tier-count { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+
+.tier-back-row { width: 100%; display: flex; align-items: center; padding: 18px 0 4px; }
 
 /* ── ANIMATIONS ── */
 @keyframes slideInRight {
@@ -324,13 +405,13 @@ body {
 
   <div class="section-label">Choose a category</div>
   <div class="category-grid">
-    <div class="cat-card" onclick="startGame('heroines')">
+    <div class="cat-card" onclick="pickTier('heroines')">
       <div class="cat-badge badge-live">Live</div>
       <div class="cat-emoji">💃</div>
       <div class="cat-name">South Indian Heroines</div>
       <div class="cat-count">28 actresses</div>
     </div>
-    <div class="cat-card" onclick="startGame('fincher')">
+    <div class="cat-card" onclick="pickTier('fincher')">
       <div class="cat-badge badge-live">Live</div>
       <div class="cat-emoji">🎬</div>
       <div class="cat-name">Fincher Films</div>
@@ -375,6 +456,51 @@ body {
     <div class="how-row">
       <div class="how-num n3">3</div>
       <div class="how-text">Last one standing is your all-time pick.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ TIER PICKER ══════════════════ -->
+<div id="tier-pick" class="screen">
+  <div class="tier-back-row">
+    <button class="back-btn" onclick="goHome()">←</button>
+  </div>
+
+  <div class="tier-header">
+    <div class="tier-cat-emoji" id="tier-cat-emoji">💃</div>
+    <div class="tier-cat-name" id="tier-cat-name">South Indian Heroines</div>
+    <div class="tier-cat-sub">How many rounds do you want?</div>
+  </div>
+
+  <div class="tier-grid">
+    <div class="tier-card t1" onclick="startGameWithTier(1)">
+      <div class="tier-glow"></div>
+      <div class="tier-emoji">⚡</div>
+      <div class="tier-info">
+        <div class="tier-name">Therndhedukkapatta Marumagals</div>
+        <div class="tier-desc">Quick fire — random 10 from the full roster. Decide fast.</div>
+      </div>
+      <div class="tier-count">~9 picks</div>
+    </div>
+
+    <div class="tier-card t2" onclick="startGameWithTier(2)">
+      <div class="tier-glow"></div>
+      <div class="tier-emoji">🎯</div>
+      <div class="tier-info">
+        <div class="tier-name">Same Clan</div>
+        <div class="tier-desc">Random 20 — mid-length game with proper competition.</div>
+      </div>
+      <div class="tier-count">~19 picks</div>
+    </div>
+
+    <div class="tier-card t3" onclick="startGameWithTier(3)">
+      <div class="tier-glow"></div>
+      <div class="tier-emoji">👑</div>
+      <div class="tier-info">
+        <div class="tier-name">Broad Mind Prospects</div>
+        <div class="tier-desc">All 28 (or 30) — the full gauntlet. No shortcuts, Parama.</div>
+      </div>
+      <div class="tier-count">27+ picks</div>
     </div>
   </div>
 </div>
@@ -465,11 +591,8 @@ body {
     </div>
   </div>
 
-  <!-- Result Tamil quote -->
-  <div class="result-tamil" id="result-tamil">
-    <div class="result-tamil-quote" id="result-tamil-quote"></div>
-    <div class="result-tamil-attr" id="result-tamil-attr"></div>
-  </div>
+  <!-- Dominant winner banner (shown only when applicable) -->
+  <div class="dominant-banner" id="dominant-banner" style="display:none"></div>
 
   <div class="stat-row">
     <div class="stat-pill">
@@ -489,10 +612,19 @@ body {
   <div class="section-label">Your full ranking</div>
   <div class="podium-section" id="podium"></div>
 
-  <div class="share-nudge">Challenge your friends — can they beat your taste? 😏</div>
+  <!-- Chitraguptan sign-off banner -->
+  <div class="chitraguptan-banner">
+    <div class="chitraguptan-text">😈 Congrats, Chitraguptan has taken very good note, now let's meet in hell</div>
+  </div>
+
   <button class="btn-primary" onclick="shareResult()">📤 Share my result</button>
   <button class="btn-secondary" onclick="playAgain()">🔄 Play again</button>
   <button class="btn-secondary" onclick="goHome()">🏠 Try another category</button>
+
+  <!-- Teams ping footer -->
+  <div class="teams-footer">
+    🏃 Thanks for prioritizing my game over your Planner Board. Now pls go before you get one more Teams Ping
+  </div>
 </div>
 
 <script>
@@ -500,107 +632,93 @@ body {
 //  TAMIL COMMENTARY ENGINE
 // ════════════════════════════════════════════
 
-// Actresses with Mallu origin — triggers special roast
 const MALLU_HEROINES = ['Aishwarya Lekshmi', 'Nithya Menen', 'Iswarya Menon', 'Mamitha Baiju', 'Anagha'];
 
 const COMMENTARY = {
-  // Champion keeps winning — loyalty roast
+  // Champion kept 3+ times in a row
   loyalty: [
-    { text: "Un Viswasam Gunaavu ka? 😤 Intha ponnu mattum thaan aa?",           sub: "Idhukku thaan loyalty nu peyar",              icon: "🤨" },
-    { text: "Adhey ponnu dhaan! Adhey ponnu dhaan! Magisthrate padathula Kamal maari irukka! 😂", sub: "Vadivelu certified",                        icon: "🎭" },
-    { text: "Boss, oru vazhiya decision pannuven-nu nenachen. Nee illaya! 😩",    sub: "Semma da nee",                               icon: "🤦" },
-    { text: "Idhu love-aa illa obsession-aa? Theriyala. 🤔",                     sub: "Manasukku theriyum",                         icon: "❤️‍🔥" },
-    { text: "Nee enna paakara? Kandippa idhuku thaan aasai! 🙏",                 sub: "Azhagana choice kandaa",                     icon: "👀" },
+    { text: "Un Viswasam Gunaavu ka? 😤 Intha ponnu mattum thaan aa?", sub: "", icon: "🤨" },
   ],
 
-  // Player keeps switching — indecision roast
+  // Switched champion 2+ times in a row
   switching: [
-    { text: "Manasa Alai Paaya Vidaadhinga Boss! 🌊 Oru decision pannunga!",     sub: "Kaaththu vaasal style decision making",      icon: "💨" },
-    { text: "Idhukku thaan solraanga — 'Aasai aasai athigamaanaa aavathillai!' 😅", sub: "Vetri Vilaiyaadu Pillai wisdom",           icon: "🎵" },
-    { text: "Selection Committee-la work pannuveengala? Indha maadhiri select panraanga! 😂", sub: "BCCI-ku apply pannunga",          icon: "🏏" },
-    { text: "Mind voice solla maatengudhu — 'Idhu better-aa adhuu better-aa?' 🤯", sub: "Classic Tamil hero problem",               icon: "🧠" },
-    { text: "Oru ponnu-kku thaan vizhuvaan-nu nenachen. Nee scene-ey vera level! 😏", sub: "Padayappa dialogue modified",           icon: "🎬" },
+    { text: "Manasa Alai Paaya Vidaadhinga Boss! 🌊 Oru mudivukku vanga!", sub: "", icon: "💨" },
   ],
 
-  // Mallu heroine wins — special roast
+  // Mallu heroine wins
   mallu: [
-    { text: "Namma moonjiku Mallu thevaya Gobi?! 🥬 Indha oor ponnu pothuma?!", sub: "Official Mallu fan certified",                icon: "🌴" },
-    { text: "Pazham-aa? Manga-aa? Illa Kerala Special-aa?! 😂 Taste different-aa irukku!", sub: "Avargalum naangalum crossover",     icon: "🥥" },
-    { text: "Tamil ponnu vittu Kerala ponnu-vaa? Kadavulae! 🙏 Enna karma idhu!", sub: "Enga oor fans shocked",                     icon: "😱" },
-    { text: "Backwaters effect-aa? Illa coconut oil effect-aa? 🥥 Explain pannunga!", sub: "Pure curiosity matter",                 icon: "🤔" },
+    { text: "Straight ah Mallu dha venumo, Bloody Rascal 😂", sub: "", icon: "🌴" },
   ],
 
-  // First pick of the game
+  // First round
   start: [
-    { text: "Seri, aasam paaru... Enga game start aagudhu! 🎬",                 sub: "Ready-aa irukkaangalaa?",                    icon: "🎉" },
-    { text: "Idhula yaaru jeeppangaanga-nu therila. Nee decide pannuva! 💪",     sub: "Power to the player",                       icon: "👊" },
-    { text: "Semma matchup! Yaaro yaaro? Onnu choose pannunga Boss! 🔥",        sub: "Let the games begin",                        icon: "🔥" },
+    { text: "Ready ah da Parama 🔥", sub: "", icon: "🎬" },
   ],
 
-  // Generic round comments (shown randomly mid-game)
+  // Every 3rd round
   random: [
-    { text: "Eppovum oru doubt irukku — irunthaLum correctaa choose pannuva! 😎", sub: "Nambikkai matter",                         icon: "😎" },
-    { text: "Kadaisila yaaru jeeppanga? Suspense-aa irukku! 🎭",                 sub: "Plot twist ready-aa irukku",                icon: "🎭" },
-    { text: "Un taste-u different level Boss! Naan enna solvadhunnu theriyala 😂", sub: "Vadivelu shocked",                        icon: "🤣" },
-    { text: "Ennamo pannuva! Ennamo pannuva! Enna pannuva-nu therinjiduchu! 😂", sub: "Predictable maari irukka? Illa illaya?",    icon: "🔮" },
-    { text: "Scene-ey change-u Boss. Nee always surprise panra! 😲",             sub: "Twist and shout",                           icon: "💫" },
-    { text: "Ivanga rendu per-um wait panraanga — un choice-ku! 👀",             sub: "Paarunga paarunga",                         icon: "👀" },
+    { text: "Parama choose panra 👀", sub: "", icon: "🎭" },
   ],
 
-  // End card quotes based on who won
-  endCard: {
-    dominant: [  // won 80%+ of rounds
-      { text: "Oru ponnu mind-la ponaL maadhengo Boss — adhey thaan truth! 💯", attr: "Modified Vijay Dialogue" },
-      { text: "Kandippu Correct! Indha choice-ku thaan Dhoni maari confidence venum! 🏏", attr: "CSK Fan Certified" },
-      { text: "Nee select pannadhu correct-aa irukkum... ippo thaan therigudhu! 🙌", attr: "Late realisation" },
-    ],
-    contested: [ // won 40-80% 
-      { text: "Konjam struggle panninaalum, correct-aa choose pannittey! Semma da! 💪", attr: "Survivor of the fittest" },
-      { text: "Easy illai, easy illai — aana correct-aa jeeppinney! 🎯",          attr: "Enna twist!" },
-      { text: "Manasule oru voice solluchu — idhu thaan right choice! 😌",        attr: "Gut feeling wins" },
-    ],
-    upset: [     // won less than 40%
-      { text: "Surprise choice! Nee different-aa think panra — adhu nalla vishayam! 🤔", attr: "Underdog wins" },
-      { text: "Semma unexpected! Aaana nee happy-aa irundhaa sari dhaaney! 😄",  attr: "Happiness over logic" },
-    ]
-  }
+  // Hovering too long on one card (3s+)
+  thinking: [
+    { text: "Nalla Yosichu Thappana Mudiva edu 🤔", sub: "", icon: "🧠" },
+  ],
+
+  // End card — dominant winner (80%+)
+  dominant: "Purnjkte uun Viswasam Guna vuku dha 💯",
+
+  // Final sign-off shown to everyone after result
+  signoff: "Congrats, Chitraguptan has taken very good note, now let's meet in hell 😈",
+  footer:  "Thanks for prioritizing my game over your Planner Board. Now pls go before you get one more Teams Ping 🏃"
 };
 
 // Track game patterns
-let lastChampion = null;
-let switchCount  = 0;
-let keepCount    = 0;
-let toastTimeout = null;
+let switchCount   = 0;
+let keepCount     = 0;
+let hoverTimer    = null;
+let hoverFired    = false;
 
-function getCommentary(winnerItem, loserItem, side, catKey) {
+function startHoverTimer() {
+  clearHoverTimer();
+  hoverFired = false;
+  hoverTimer = setTimeout(() => {
+    if (!hoverFired && !picking) {
+      hoverFired = true;
+      showToast(pick_random(COMMENTARY.thinking));
+    }
+  }, 3000);
+}
+
+function clearHoverTimer() {
+  if (hoverTimer) { clearTimeout(hoverTimer); hoverTimer = null; }
+}
+
+function getCommentary(winnerItem, side, catKey) {
   // First round
-  if (round === 1) {
-    return pick_random(COMMENTARY.start);
-  }
+  if (round === 1) return pick_random(COMMENTARY.start);
 
-  // Mallu heroine wins (heroines category only)
+  // Mallu heroine wins (heroines only)
   if (catKey === 'heroines' && side === 'right' && MALLU_HEROINES.includes(winnerItem.name)) {
     return pick_random(COMMENTARY.mallu);
   }
 
-  // Champion kept (left card won)
+  // Champion kept
   if (side === 'left') {
-    keepCount++;
-    switchCount = 0;
+    keepCount++; switchCount = 0;
     if (keepCount >= 3) return pick_random(COMMENTARY.loyalty);
   }
 
-  // Switched to challenger (right card won)
+  // Switched to challenger
   if (side === 'right') {
-    switchCount++;
-    keepCount = 0;
+    switchCount++; keepCount = 0;
     if (switchCount >= 2) return pick_random(COMMENTARY.switching);
   }
 
-  // Random every 3rd round otherwise
+  // Random every 3rd round
   if (round % 3 === 0) return pick_random(COMMENTARY.random);
 
-  return null; // silence — not every round needs a comment
+  return null;
 }
 
 function pick_random(arr) {
@@ -623,13 +741,7 @@ function showToast(commentary) {
   setTimeout(() => toast.classList.remove('toast-bounce'), 400);
 }
 
-function getEndQuote() {
-  const pct = championWins / (total - 1);
-  const pool = pct >= 0.8 ? COMMENTARY.endCard.dominant
-             : pct >= 0.4 ? COMMENTARY.endCard.contested
-             : COMMENTARY.endCard.upset;
-  return pick_random(pool);
-}
+
 
 // ════════════════════════════════════════════
 //  DATA
@@ -688,7 +800,7 @@ const CATEGORIES = {
 // ════════════════════════════════════════════
 //  STATE
 // ════════════════════════════════════════════
-let cat, catKey, deck, champion, championWins, round, total, defeated, picking;
+let cat, catKey, deck, champion, championWins, round, total, defeated, picking, currentTier;
 
 function shuffle(arr) {
   const a = [...arr];
@@ -710,17 +822,57 @@ function show(id) {
 function goHome() { show('home'); }
 
 // ════════════════════════════════════════════
+//  TIER PICKER
+// ════════════════════════════════════════════
+
+// Tier sizes — randomly chosen within range each game for variety
+const TIER_SIZES = {
+  1: { min: 8,  max: 10 },   // Therndhedukkapatta Marumagals — ~9 picks
+  2: { min: 15, max: 20 },   // Same Clan — ~19 picks
+  3: { min: null, max: null } // Broad Mind Prospects — full roster
+};
+
+let pendingCatKey = null;
+
+function pickTier(key) {
+  pendingCatKey = key;
+  const c = CATEGORIES[key];
+  document.getElementById('tier-cat-emoji').textContent = c.emoji;
+  document.getElementById('tier-cat-name').textContent  = c.name;
+  show('tier-pick');
+}
+
+function startGameWithTier(tier) {
+  const key = pendingCatKey;
+  const allItems = CATEGORIES[key].items;
+  const { min, max } = TIER_SIZES[tier];
+
+  let size;
+  if (max === null) {
+    size = allItems.length; // full roster
+  } else {
+    size = Math.floor(Math.random() * (max - min + 1)) + min;
+    size = Math.min(size, allItems.length); // can't exceed what exists
+  }
+
+  currentTier = tier;
+  startGame(key, size);
+}
+
+// ════════════════════════════════════════════
 //  GAME
 // ════════════════════════════════════════════
-function startGame(key) {
+function startGame(key, size) {
   catKey       = key;
   cat          = CATEGORIES[key];
-  deck         = shuffle([...cat.items]);
+  const shuffled = shuffle([...cat.items]);
+  const picked   = size ? shuffled.slice(0, size) : shuffled; // trim to tier size
+  deck         = shuffle([...picked]); // re-shuffle the subset
   champion     = deck.pop();
   championWins = 0;
   defeated     = [];
   round        = 0;
-  total        = cat.items.length;
+  total        = picked.length;
   picking      = false;
   switchCount  = 0;
   keepCount    = 0;
@@ -752,6 +904,14 @@ function nextRound() {
 
   document.getElementById('card-right')._item = challenger;
   document.getElementById('card-left')._item  = champion;
+
+  // Hover timer — fires if player stares too long at one card
+  ['card-left','card-right'].forEach(id => {
+    const el = document.getElementById(id);
+    el.onmouseenter = () => startHoverTimer();
+    el.onmouseleave = () => clearHoverTimer();
+    el.ontouchstart = () => startHoverTimer();
+  });
 
   // First round toast
   if (round === 1) showToast(pick_random(COMMENTARY.start));
@@ -803,8 +963,9 @@ function pick(side) {
   document.getElementById(`card-${side === 'left' ? 'right' : 'left'}`).classList.add('rejected');
   defeated.push(loserItem);
 
-  // Tamil commentary after pick
-  const commentary = getCommentary(winnerItem, loserItem, side, catKey);
+  // Clear hover timer, show pick commentary
+  clearHoverTimer();
+  const commentary = getCommentary(winnerItem, side, catKey);
   showToast(commentary);
 
   setTimeout(() => {
@@ -828,8 +989,10 @@ function showResult() {
     null, champion
   );
 
+  const tierNames = { 1: 'Therndhedukkapatta Marumagals', 2: 'Same Clan', 3: 'Broad Mind Prospects' };
+  const tierName  = tierNames[currentTier] || '';
   document.getElementById('winner-name').textContent = champion.name;
-  document.getElementById('winner-sub').textContent  = `Survived ${championWins} challenge${championWins !== 1 ? 's' : ''}`;
+  document.getElementById('winner-sub').textContent  = `Survived ${championWins} challenge${championWins !== 1 ? 's' : ''} · ${tierName}`;
   document.getElementById('result-headline').textContent = `${champion.name} wins! 🏆`;
   document.getElementById('stat-wins').textContent   = championWins;
   document.getElementById('stat-rounds').textContent = round;
@@ -838,10 +1001,14 @@ function showResult() {
   document.getElementById('stat-rarity').textContent =
     rarityPct >= 80 ? '🔥 Rare' : rarityPct >= 50 ? '⚡ Bold' : '😊 Common';
 
-  // End card Tamil quote
-  const endQ = getEndQuote();
-  document.getElementById('result-tamil-quote').textContent = endQ.text;
-  document.getElementById('result-tamil-attr').textContent  = '— ' + endQ.attr;
+  // Dominant banner — only if 80%+ wins
+  const domBanner = document.getElementById('dominant-banner');
+  if (rarityPct >= 80) {
+    domBanner.textContent = COMMENTARY.dominant;
+    domBanner.style.display = 'block';
+  } else {
+    domBanner.style.display = 'none';
+  }
 
   // Podium
   const ranked = [champion, ...[...defeated].reverse()];
@@ -883,8 +1050,7 @@ function showResult() {
 //  SHARE
 // ════════════════════════════════════════════
 function shareResult() {
-  const endQ = getEndQuote();
-  const txt = `🏆 My This or That result — ${cat.name}\n👑 ${champion.name} beat ${championWins} challengers!\n\n"${endQ.text}"\n\nWhat's yours? #ThisOrThat`;
+  const txt = `🏆 My This or That result — ${cat.name}\n👑 ${champion.name} beat ${championWins} challengers!\n\n${COMMENTARY.signoff}\n\nWhat's yours? #ThisOrThat`;
   if (navigator.share) {
     navigator.share({ title: 'This or That', text: txt }).catch(() => {});
   } else if (navigator.clipboard) {
@@ -893,7 +1059,7 @@ function shareResult() {
   }
 }
 
-function playAgain() { startGame(catKey); }
+function playAgain() { pickTier(catKey); }
 </script>
 </body>
 </html>
