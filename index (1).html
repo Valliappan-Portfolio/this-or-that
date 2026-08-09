@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>This or That</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #13131a;
+  --card-bg: #1a1a24;
+  --accent: #ff3e6c;
+  --accent2: #7c3aed;
+  --gold: #f59e0b;
+  --text: #f0f0f5;
+  --muted: #6b7280;
+  --border: rgba(255,255,255,0.08);
+  --radius: 22px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+.screen { display: none; width: 100%; max-width: 680px; flex-direction: column; align-items: center; padding: 0 20px 60px; }
+.screen.active { display: flex; }
+
+/* ── HOME ── */
+.home-header { width: 100%; padding: 44px 0 10px; text-align: center; }
+.logo {
+  font-size: 38px; font-weight: 900; letter-spacing: -1.5px;
+  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.tagline { font-size: 12px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; }
+
+.section-label {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  letter-spacing: 2px; text-transform: uppercase;
+  margin: 32px 0 14px; align-self: flex-start; width: 100%;
+}
+
+.category-grid { width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+.cat-card {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 18px; padding: 20px 16px; cursor: pointer;
+  transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+  position: relative; overflow: hidden;
+}
+.cat-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.18); box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+.cat-emoji { font-size: 32px; margin-bottom: 10px; }
+.cat-name { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.cat-count { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.cat-badge {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 9px; font-weight: 700; letter-spacing: 1px;
+  padding: 2px 7px; border-radius: 20px; text-transform: uppercase;
+}
+.badge-live { background: rgba(255,62,108,0.15); color: #ff3e6c; border: 1px solid rgba(255,62,108,0.25); }
+.badge-soon { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
+.cat-card.disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+
+.how-box {
+  width: 100%; background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 18px; padding: 20px; display: flex; gap: 0;
+}
+.how-row { flex: 1; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; padding: 0 12px; }
+.how-row + .how-row { border-left: 1px solid var(--border); }
+.how-num {
+  width: 30px; height: 30px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; margin-bottom: 4px;
+}
+.how-num.n1 { background: rgba(255,62,108,0.15); color: #ff3e6c; }
+.how-num.n2 { background: rgba(124,58,237,0.15); color: #a78bfa; }
+.how-num.n3 { background: rgba(245,158,11,0.15); color: var(--gold); }
+.how-text { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* ── GAME ── */
+#game { padding-top: 0; }
+
+.game-header {
+  width: 100%; display: flex; align-items: center;
+  padding: 22px 0 16px; gap: 14px;
+}
+.back-btn {
+  background: var(--card-bg); border: 1px solid var(--border); color: var(--text);
+  width: 42px; height: 42px; border-radius: 12px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0; transition: background 0.15s;
+}
+.back-btn:hover { background: var(--surface); }
+.game-title-wrap { flex: 1; min-width: 0; }
+.game-category { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
+.game-round-label { font-size: 18px; font-weight: 700; margin-top: 2px; }
+.streak-pill {
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);
+  color: var(--gold); font-size: 12px; font-weight: 700;
+  padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 5px;
+  white-space: nowrap; flex-shrink: 0;
+}
+
+.progress-wrap { width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 22px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #ff3e6c, #7c3aed); border-radius: 2px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+
+/* Tamil Commentary Toast */
+.tamil-toast {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(255,62,108,0.12));
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  min-height: 52px;
+}
+.tamil-toast.visible { opacity: 1; transform: translateY(0); }
+.tamil-toast-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+.tamil-toast-text { font-size: 13px; font-weight: 600; color: #e0d4ff; line-height: 1.5; flex: 1; }
+.tamil-toast-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+/* VS row */
+.vs-row { display: flex; align-items: center; gap: 16px; width: 100%; margin-bottom: 16px; }
+.vs-line { flex: 1; height: 1px; background: var(--border); }
+.vs-badge { font-size: 13px; font-weight: 900; color: var(--muted); letter-spacing: 2px; }
+
+/* CARDS — bigger */
+.cards-arena { width: 100%; display: flex; gap: 18px; justify-content: center; }
+
+.player-card {
+  flex: 1; max-width: 290px; height: 420px;
+  border-radius: var(--radius); position: relative; cursor: pointer;
+  overflow: hidden; border: 1.5px solid var(--border);
+  transition: transform 0.2s cubic-bezier(.4,0,.2,1), border-color 0.2s, box-shadow 0.2s;
+  background: var(--card-bg); user-select: none;
+}
+.player-card:hover { transform: scale(1.025); border-color: rgba(255,255,255,0.22); box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
+.player-card:active { transform: scale(0.97); }
+.player-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.card-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #1e1e2e 0%, #2a1a3a 100%);
+  gap: 12px; padding: 20px;
+}
+.card-placeholder-emoji { font-size: 64px; }
+.card-placeholder-name { font-size: 14px; color: rgba(255,255,255,0.4); text-align: center; font-weight: 600; }
+
+.card-gradient {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 55%;
+  background: linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.55) 50%, transparent 100%);
+  pointer-events: none;
+}
+.card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 14px 16px 18px; pointer-events: none; }
+.card-name { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.2; }
+.card-meta { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+.card-wins-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.35);
+  color: var(--gold); font-size: 10px; font-weight: 700;
+  padding: 3px 8px; border-radius: 8px; margin-top: 6px;
+}
+.champion-tag {
+  position: absolute; top: 12px; left: 12px;
+  background: rgba(245,158,11,0.18); border: 1px solid rgba(245,158,11,0.35);
+  border-radius: 9px; padding: 4px 10px;
+  font-size: 10px; font-weight: 700; color: var(--gold);
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+
+.tap-hint { text-align: center; font-size: 12px; color: var(--muted); margin-top: 18px; width: 100%; }
+
+.player-card.chosen { border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(255,62,108,0.2) !important; }
+.player-card.rejected { opacity: 0.2; transform: scale(0.95); }
+
+/* ── RESULT ── */
+#result { padding-top: 0; }
+.result-header { width: 100%; padding: 36px 0 18px; text-align: center; }
+.result-eyebrow { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.result-headline {
+  font-size: 30px; font-weight: 900; line-height: 1.15;
+  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.winner-wrap { position: relative; display: inline-block; margin-bottom: 22px; }
+.winner-crown { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 36px; z-index: 2; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.9)); }
+.winner-card {
+  width: 240px; height: 360px; border-radius: 26px; overflow: hidden;
+  border: 2px solid rgba(255,62,108,0.5); background: var(--card-bg);
+  animation: pulseGlow 2s ease-in-out infinite;
+  position: relative;
+}
+.winner-card img { width: 100%; height: 100%; object-fit: cover; }
+.winner-name-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 55px 18px 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.97), transparent);
+  text-align: center;
+}
+.winner-name { font-size: 22px; font-weight: 900; color: #fff; }
+.winner-sub { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 3px; }
+
+/* Result Tamil toast */
+.result-tamil {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(255,62,108,0.1));
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.result-tamil-quote { font-size: 15px; font-weight: 700; color: #fde68a; line-height: 1.5; }
+.result-tamil-attr { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+.stat-row { width: 100%; display: flex; gap: 10px; margin-bottom: 22px; }
+.stat-pill {
+  flex: 1; background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 16px; padding: 16px 10px; text-align: center;
+}
+.stat-number {
+  font-size: 28px; font-weight: 900;
+  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.stat-label { font-size: 10px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 1px; }
+
+.podium-section { width: 100%; margin-bottom: 26px; }
+.podium-item {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 13px; padding: 11px 16px;
+  display: flex; align-items: center; gap: 13px; margin-bottom: 8px;
+}
+.podium-rank { font-size: 14px; font-weight: 900; width: 24px; text-align: center; flex-shrink: 0; }
+.podium-thumb {
+  width: 46px; height: 46px; border-radius: 50%; overflow: hidden;
+  background: var(--surface); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.podium-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.podium-info { flex: 1; min-width: 0; }
+.podium-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.podium-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.podium-bar-track { width: 60px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.podium-bar-fill { height: 100%; background: linear-gradient(90deg, #ff3e6c, #7c3aed); border-radius: 2px; }
+
+.btn-primary {
+  width: 100%; padding: 17px; border: none; border-radius: 15px;
+  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
+  color: #fff; font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s; margin-bottom: 10px;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-secondary {
+  width: 100%; padding: 15px; border: 1px solid var(--border); border-radius: 15px;
+  background: var(--card-bg); color: var(--text); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s; margin-bottom: 10px;
+}
+.btn-secondary:hover { background: var(--surface); }
+.share-nudge { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+
+/* ── ANIMATIONS ── */
+@keyframes slideInRight {
+  from { transform: translateX(100px) scale(0.94); opacity: 0; }
+  to   { transform: translateX(0) scale(1); opacity: 1; }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 24px rgba(255,62,108,0.12); }
+  50%       { box-shadow: 0 0 48px rgba(255,62,108,0.35); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes toastBounce {
+  0%   { transform: scale(0.95) translateY(-4px); opacity: 0; }
+  60%  { transform: scale(1.02) translateY(1px);  opacity: 1; }
+  100% { transform: scale(1)    translateY(0);    opacity: 1; }
+}
+
+.slide-in { animation: slideInRight 0.34s cubic-bezier(.4,0,.2,1) forwards; }
+.fade-up  { animation: fadeUp 0.4s ease forwards; }
+.toast-bounce { animation: toastBounce 0.4s cubic-bezier(.4,0,.2,1) forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide-in, .fade-up, .winner-card, .toast-bounce { animation: none !important; }
+}
+
+@media (max-width: 500px) {
+  .category-grid { grid-template-columns: 1fr 1fr; }
+  .how-box { flex-direction: column; }
+  .how-row + .how-row { border-left: none; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px; }
+  .player-card { height: 340px; }
+  .card-name { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ HOME ══════════════════ -->
+<div id="home" class="screen active">
+  <div class="home-header">
+    <div class="logo">This or That</div>
+    <div class="tagline">Pick your favourite. Defend it.</div>
+  </div>
+
+  <div class="section-label">Choose a category</div>
+  <div class="category-grid">
+    <div class="cat-card" onclick="startGame('heroines')">
+      <div class="cat-badge badge-live">Live</div>
+      <div class="cat-emoji">💃</div>
+      <div class="cat-name">South Indian Heroines</div>
+      <div class="cat-count">28 actresses</div>
+    </div>
+    <div class="cat-card" onclick="startGame('fincher')">
+      <div class="cat-badge badge-live">Live</div>
+      <div class="cat-emoji">🎬</div>
+      <div class="cat-name">Fincher Films</div>
+      <div class="cat-count">8 films</div>
+    </div>
+    <div class="cat-card disabled">
+      <div class="cat-badge badge-soon">Soon</div>
+      <div class="cat-emoji">🏏</div>
+      <div class="cat-name">IPL Batters GOAT</div>
+      <div class="cat-count">Coming soon</div>
+    </div>
+    <div class="cat-card disabled">
+      <div class="cat-badge badge-soon">Soon</div>
+      <div class="cat-emoji">🎵</div>
+      <div class="cat-name">Kollywood Songs</div>
+      <div class="cat-count">Coming soon</div>
+    </div>
+    <div class="cat-card disabled">
+      <div class="cat-badge badge-soon">Soon</div>
+      <div class="cat-emoji">🎙️</div>
+      <div class="cat-name">Music Directors</div>
+      <div class="cat-count">Coming soon</div>
+    </div>
+    <div class="cat-card disabled">
+      <div class="cat-badge badge-soon">Soon</div>
+      <div class="cat-emoji">🏆</div>
+      <div class="cat-name">Test Cricket GOAT</div>
+      <div class="cat-count">Coming soon</div>
+    </div>
+  </div>
+
+  <div class="section-label">How it works</div>
+  <div class="how-box">
+    <div class="how-row">
+      <div class="how-num n1">1</div>
+      <div class="how-text">Two contenders appear. Tap the one you prefer.</div>
+    </div>
+    <div class="how-row">
+      <div class="how-num n2">2</div>
+      <div class="how-text">Winner stays. A new challenger arrives.</div>
+    </div>
+    <div class="how-row">
+      <div class="how-num n3">3</div>
+      <div class="how-text">Last one standing is your all-time pick.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ GAME ══════════════════ -->
+<div id="game" class="screen">
+  <div class="game-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div class="game-title-wrap">
+      <div class="game-category" id="game-cat-label">—</div>
+      <div class="game-round-label" id="game-round-label">Round 1</div>
+    </div>
+    <div class="streak-pill">🔥 <span id="streak-count">0</span> wins</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <!-- Tamil Commentary -->
+  <div class="tamil-toast" id="tamil-toast">
+    <div class="tamil-toast-icon" id="tamil-icon">🎭</div>
+    <div>
+      <div class="tamil-toast-text" id="tamil-text"></div>
+      <div class="tamil-toast-sub" id="tamil-sub"></div>
+    </div>
+  </div>
+
+  <div class="vs-row">
+    <div class="vs-line"></div>
+    <div class="vs-badge">VS</div>
+    <div class="vs-line"></div>
+  </div>
+
+  <div class="cards-arena">
+    <!-- Champion -->
+    <div class="player-card" id="card-left" onclick="pick('left')">
+      <div class="card-placeholder" id="left-ph">
+        <div class="card-placeholder-emoji" id="left-ph-emoji">👑</div>
+        <div class="card-placeholder-name" id="left-ph-name"></div>
+      </div>
+      <img id="left-img" style="display:none" alt="">
+      <div class="card-gradient"></div>
+      <div class="champion-tag" id="left-crown" style="display:none">👑 Champ</div>
+      <div class="card-info">
+        <div class="card-name" id="left-name">—</div>
+        <div class="card-meta" id="left-meta"></div>
+        <div class="card-wins-badge" id="left-wins" style="display:none">🔥 <span id="left-wins-n">0</span> wins</div>
+      </div>
+    </div>
+
+    <!-- Challenger -->
+    <div class="player-card" id="card-right" onclick="pick('right')">
+      <div class="card-placeholder" id="right-ph">
+        <div class="card-placeholder-emoji" id="right-ph-emoji">⚡</div>
+        <div class="card-placeholder-name" id="right-ph-name"></div>
+      </div>
+      <img id="right-img" style="display:none" alt="">
+      <div class="card-gradient"></div>
+      <div class="card-info">
+        <div class="card-name" id="right-name">—</div>
+        <div class="card-meta" id="right-meta"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tap-hint">Tap the card you prefer</div>
+</div>
+
+<!-- ══════════════════ RESULT ══════════════════ -->
+<div id="result" class="screen">
+  <div class="result-header">
+    <div class="result-eyebrow">Game over · Your champion</div>
+    <div class="result-headline" id="result-headline">Your winner!</div>
+  </div>
+
+  <div class="winner-wrap">
+    <div class="winner-crown">👑</div>
+    <div class="winner-card">
+      <div class="card-placeholder" id="winner-ph">
+        <div class="card-placeholder-emoji" id="winner-ph-emoji">🏆</div>
+      </div>
+      <img id="winner-img" style="display:none;width:100%;height:100%;object-fit:cover" alt="">
+      <div class="winner-name-overlay">
+        <div class="winner-name" id="winner-name">—</div>
+        <div class="winner-sub" id="winner-sub"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result Tamil quote -->
+  <div class="result-tamil" id="result-tamil">
+    <div class="result-tamil-quote" id="result-tamil-quote"></div>
+    <div class="result-tamil-attr" id="result-tamil-attr"></div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-pill">
+      <div class="stat-number" id="stat-wins">0</div>
+      <div class="stat-label">Wins</div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-number" id="stat-rounds">0</div>
+      <div class="stat-label">Rounds</div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-number" id="stat-rarity">—</div>
+      <div class="stat-label">Pick</div>
+    </div>
+  </div>
+
+  <div class="section-label">Your full ranking</div>
+  <div class="podium-section" id="podium"></div>
+
+  <div class="share-nudge">Challenge your friends — can they beat your taste? 😏</div>
+  <button class="btn-primary" onclick="shareResult()">📤 Share my result</button>
+  <button class="btn-secondary" onclick="playAgain()">🔄 Play again</button>
+  <button class="btn-secondary" onclick="goHome()">🏠 Try another category</button>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+//  TAMIL COMMENTARY ENGINE
+// ════════════════════════════════════════════
+
+// Actresses with Mallu origin — triggers special roast
+const MALLU_HEROINES = ['Aishwarya Lekshmi', 'Nithya Menen', 'Iswarya Menon', 'Mamitha Baiju', 'Anagha'];
+
+const COMMENTARY = {
+  // Champion keeps winning — loyalty roast
+  loyalty: [
+    { text: "Un Viswasam Gunaavu ka? 😤 Intha ponnu mattum thaan aa?",           sub: "Idhukku thaan loyalty nu peyar",              icon: "🤨" },
+    { text: "Adhey ponnu dhaan! Adhey ponnu dhaan! Magisthrate padathula Kamal maari irukka! 😂", sub: "Vadivelu certified",                        icon: "🎭" },
+    { text: "Boss, oru vazhiya decision pannuven-nu nenachen. Nee illaya! 😩",    sub: "Semma da nee",                               icon: "🤦" },
+    { text: "Idhu love-aa illa obsession-aa? Theriyala. 🤔",                     sub: "Manasukku theriyum",                         icon: "❤️‍🔥" },
+    { text: "Nee enna paakara? Kandippa idhuku thaan aasai! 🙏",                 sub: "Azhagana choice kandaa",                     icon: "👀" },
+  ],
+
+  // Player keeps switching — indecision roast
+  switching: [
+    { text: "Manasa Alai Paaya Vidaadhinga Boss! 🌊 Oru decision pannunga!",     sub: "Kaaththu vaasal style decision making",      icon: "💨" },
+    { text: "Idhukku thaan solraanga — 'Aasai aasai athigamaanaa aavathillai!' 😅", sub: "Vetri Vilaiyaadu Pillai wisdom",           icon: "🎵" },
+    { text: "Selection Committee-la work pannuveengala? Indha maadhiri select panraanga! 😂", sub: "BCCI-ku apply pannunga",          icon: "🏏" },
+    { text: "Mind voice solla maatengudhu — 'Idhu better-aa adhuu better-aa?' 🤯", sub: "Classic Tamil hero problem",               icon: "🧠" },
+    { text: "Oru ponnu-kku thaan vizhuvaan-nu nenachen. Nee scene-ey vera level! 😏", sub: "Padayappa dialogue modified",           icon: "🎬" },
+  ],
+
+  // Mallu heroine wins — special roast
+  mallu: [
+    { text: "Namma moonjiku Mallu thevaya Gobi?! 🥬 Indha oor ponnu pothuma?!", sub: "Official Mallu fan certified",                icon: "🌴" },
+    { text: "Pazham-aa? Manga-aa? Illa Kerala Special-aa?! 😂 Taste different-aa irukku!", sub: "Avargalum naangalum crossover",     icon: "🥥" },
+    { text: "Tamil ponnu vittu Kerala ponnu-vaa? Kadavulae! 🙏 Enna karma idhu!", sub: "Enga oor fans shocked",                     icon: "😱" },
+    { text: "Backwaters effect-aa? Illa coconut oil effect-aa? 🥥 Explain pannunga!", sub: "Pure curiosity matter",                 icon: "🤔" },
+  ],
+
+  // First pick of the game
+  start: [
+    { text: "Seri, aasam paaru... Enga game start aagudhu! 🎬",                 sub: "Ready-aa irukkaangalaa?",                    icon: "🎉" },
+    { text: "Idhula yaaru jeeppangaanga-nu therila. Nee decide pannuva! 💪",     sub: "Power to the player",                       icon: "👊" },
+    { text: "Semma matchup! Yaaro yaaro? Onnu choose pannunga Boss! 🔥",        sub: "Let the games begin",                        icon: "🔥" },
+  ],
+
+  // Generic round comments (shown randomly mid-game)
+  random: [
+    { text: "Eppovum oru doubt irukku — irunthaLum correctaa choose pannuva! 😎", sub: "Nambikkai matter",                         icon: "😎" },
+    { text: "Kadaisila yaaru jeeppanga? Suspense-aa irukku! 🎭",                 sub: "Plot twist ready-aa irukku",                icon: "🎭" },
+    { text: "Un taste-u different level Boss! Naan enna solvadhunnu theriyala 😂", sub: "Vadivelu shocked",                        icon: "🤣" },
+    { text: "Ennamo pannuva! Ennamo pannuva! Enna pannuva-nu therinjiduchu! 😂", sub: "Predictable maari irukka? Illa illaya?",    icon: "🔮" },
+    { text: "Scene-ey change-u Boss. Nee always surprise panra! 😲",             sub: "Twist and shout",                           icon: "💫" },
+    { text: "Ivanga rendu per-um wait panraanga — un choice-ku! 👀",             sub: "Paarunga paarunga",                         icon: "👀" },
+  ],
+
+  // End card quotes based on who won
+  endCard: {
+    dominant: [  // won 80%+ of rounds
+      { text: "Oru ponnu mind-la ponaL maadhengo Boss — adhey thaan truth! 💯", attr: "Modified Vijay Dialogue" },
+      { text: "Kandippu Correct! Indha choice-ku thaan Dhoni maari confidence venum! 🏏", attr: "CSK Fan Certified" },
+      { text: "Nee select pannadhu correct-aa irukkum... ippo thaan therigudhu! 🙌", attr: "Late realisation" },
+    ],
+    contested: [ // won 40-80% 
+      { text: "Konjam struggle panninaalum, correct-aa choose pannittey! Semma da! 💪", attr: "Survivor of the fittest" },
+      { text: "Easy illai, easy illai — aana correct-aa jeeppinney! 🎯",          attr: "Enna twist!" },
+      { text: "Manasule oru voice solluchu — idhu thaan right choice! 😌",        attr: "Gut feeling wins" },
+    ],
+    upset: [     // won less than 40%
+      { text: "Surprise choice! Nee different-aa think panra — adhu nalla vishayam! 🤔", attr: "Underdog wins" },
+      { text: "Semma unexpected! Aaana nee happy-aa irundhaa sari dhaaney! 😄",  attr: "Happiness over logic" },
+    ]
+  }
+};
+
+// Track game patterns
+let lastChampion = null;
+let switchCount  = 0;
+let keepCount    = 0;
+let toastTimeout = null;
+
+function getCommentary(winnerItem, loserItem, side, catKey) {
+  // First round
+  if (round === 1) {
+    return pick_random(COMMENTARY.start);
+  }
+
+  // Mallu heroine wins (heroines category only)
+  if (catKey === 'heroines' && side === 'right' && MALLU_HEROINES.includes(winnerItem.name)) {
+    return pick_random(COMMENTARY.mallu);
+  }
+
+  // Champion kept (left card won)
+  if (side === 'left') {
+    keepCount++;
+    switchCount = 0;
+    if (keepCount >= 3) return pick_random(COMMENTARY.loyalty);
+  }
+
+  // Switched to challenger (right card won)
+  if (side === 'right') {
+    switchCount++;
+    keepCount = 0;
+    if (switchCount >= 2) return pick_random(COMMENTARY.switching);
+  }
+
+  // Random every 3rd round otherwise
+  if (round % 3 === 0) return pick_random(COMMENTARY.random);
+
+  return null; // silence — not every round needs a comment
+}
+
+function pick_random(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function showToast(commentary) {
+  const toast = document.getElementById('tamil-toast');
+  if (!commentary) {
+    toast.classList.remove('visible');
+    return;
+  }
+  document.getElementById('tamil-icon').textContent = commentary.icon || '🎭';
+  document.getElementById('tamil-text').textContent = commentary.text;
+  document.getElementById('tamil-sub').textContent  = commentary.sub || '';
+  toast.classList.remove('visible');
+  void toast.offsetWidth;
+  toast.classList.add('visible');
+  toast.classList.add('toast-bounce');
+  setTimeout(() => toast.classList.remove('toast-bounce'), 400);
+}
+
+function getEndQuote() {
+  const pct = championWins / (total - 1);
+  const pool = pct >= 0.8 ? COMMENTARY.endCard.dominant
+             : pct >= 0.4 ? COMMENTARY.endCard.contested
+             : COMMENTARY.endCard.upset;
+  return pick_random(pool);
+}
+
+// ════════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════════
+const CATEGORIES = {
+  heroines: {
+    name: 'South Indian Heroines',
+    emoji: '💃',
+    items: [
+      { name: 'Aishwarya Lekshmi',   meta: 'Malayalam · Tamil',          emoji: '🌸', img: 'images/Aishwarya Lekshmi.avif'  },
+      { name: 'Aishwarya Rajesh',    meta: 'Tamil',                      emoji: '🎭', img: 'images/Aishwarya Rajesh.webp'   },
+      { name: 'Anagha',              meta: 'Malayalam · Tamil',          emoji: '✨', img: 'images/Anagha.jfif'             },
+      { name: 'Anupama',             meta: 'Tamil · Telugu',             emoji: '🌟', img: 'images/Anupama.jpg'             },
+      { name: 'Anushka Shetty',      meta: 'Telugu · Tamil',             emoji: '👑', img: 'images/Anushka Shetty.jpg'     },
+      { name: 'Asin',                meta: 'Tamil · Hindi',              emoji: '💫', img: 'images/Asin.jpg'               },
+      { name: 'Iswarya Menon',       meta: 'Tamil',                      emoji: '🌺', img: 'images/Iswarya Menon.webp'     },
+      { name: 'Kajal Agarwal',       meta: 'Telugu · Tamil · Hindi',    emoji: '💎', img: 'images/Kajal Agarwal.png'      },
+      { name: 'Kayadu Lohar',        meta: 'Tamil',                      emoji: '🌙', img: 'images/Kayadu Lohar.jpg'       },
+      { name: 'Keerthy Suresh',      meta: 'Tamil · Telugu · Malayalam', emoji: '⭐', img: 'images/Keerthy Suresh.jpg'    },
+      { name: 'Ketika Sharma',       meta: 'Telugu · Hindi',             emoji: '🔥', img: 'images/Ketika.jfif'           },
+      { name: 'Malavika Mohanan',    meta: 'Tamil · Hindi · Malayalam',  emoji: '🦋', img: 'images/Malavika Mohanan.webp' },
+      { name: 'Mamitha Baiju',       meta: 'Malayalam',                  emoji: '🌻', img: 'images/Mamitha Baiju.jfif'    },
+      { name: 'Meenakshi Chaudhary', meta: 'Telugu · Hindi',             emoji: '💡', img: 'images/Meenakshi Chaudry.png' },
+      { name: 'Mrunal Thakur',       meta: 'Hindi · Telugu · Tamil',    emoji: '🎀', img: 'images/Mrunal Thakur.jpg'     },
+      { name: 'Nithya Menen',        meta: 'Malayalam · Tamil · Telugu', emoji: '🌊', img: 'images/Nitya Menon.jfif'      },
+      { name: 'Pooja Hegde',         meta: 'Telugu · Tamil · Hindi',    emoji: '🌈', img: 'images/Pooja Hegde.jfif'      },
+      { name: 'Preity Mukundhan',    meta: 'Tamil',                      emoji: '🌷', img: 'images/Preity Mukundhan.png'  },
+      { name: 'Priya Anand',         meta: 'Tamil · Telugu',             emoji: '🎵', img: 'images/Priya Anand.jfif'      },
+      { name: 'Priyamani',           meta: 'Telugu · Tamil · Kannada',   emoji: '🎬', img: 'images/Priyamani.png'         },
+      { name: 'Rashmika Mandanna',   meta: 'Telugu · Kannada · Hindi',   emoji: '😊', img: 'images/Rashmika.jfif'         },
+      { name: 'Saanve Megghana',     meta: 'Telugu',                     emoji: '🌿', img: 'images/Saanve.jfif'           },
+      { name: 'Samantha',            meta: 'Telugu · Tamil',             emoji: '💪', img: 'images/Samantha.webp'         },
+      { name: 'Samyuktha',           meta: 'Tamil · Telugu',             emoji: '🎭', img: 'images/Samyuktha.jfif'        },
+      { name: 'Shobita Dhulipala',   meta: 'Telugu · Tamil · Hindi',    emoji: '🏆', img: 'images/Shobitha.webp'         },
+      { name: 'Shriya Saran',        meta: 'Telugu · Tamil · Hindi',    emoji: '💃', img: 'images/Shriya.jfif'           },
+      { name: 'Sree Leela',          meta: 'Telugu',                     emoji: '⚡', img: 'images/Sree Leela.jpg'        },
+      { name: 'Trisha',              meta: 'Tamil · Telugu',             emoji: '👸', img: 'images/Trisha.jfif'           },
+    ]
+  },
+  fincher: {
+    name: 'Fincher Films',
+    emoji: '🎬',
+    items: [
+      { name: 'Fight Club',                     meta: '1999 · 8.8 ★', emoji: '🥊', img: 'https://image.tmdb.org/t/p/w500/bptfVGEh1zX3ux8BpCkBad2bsqk.jpg' },
+      { name: 'Se7en',                           meta: '1995 · 8.6 ★', emoji: '📦', img: 'https://image.tmdb.org/t/p/w500/6yoghtyTpznpBik8EngEmJskVnS.jpg' },
+      { name: 'Gone Girl',                       meta: '2014 · 8.1 ★', emoji: '🔪', img: 'https://image.tmdb.org/t/p/w500/fSRb7vyIP8rQpL0I47P3qUsEKX3.jpg' },
+      { name: 'Zodiac',                          meta: '2007 · 7.7 ★', emoji: '🔍', img: 'https://image.tmdb.org/t/p/w500/m5cuDxRHEBGaqJCqINH3MQZBVy0.jpg' },
+      { name: 'The Social Network',              meta: '2010 · 7.8 ★', emoji: '💻', img: 'https://image.tmdb.org/t/p/w500/n0ybibhJtQ5icDqTp8eRytcIHso.jpg' },
+      { name: 'The Girl with the Dragon Tattoo', meta: '2011 · 7.8 ★', emoji: '🐉', img: 'https://image.tmdb.org/t/p/w500/ed4Cz2YoSfzWcHWLsNb5OhKYGgT.jpg' },
+      { name: 'The Killer',                      meta: '2023 · 7.0 ★', emoji: '🔫', img: 'https://image.tmdb.org/t/p/w500/e0sE9vkAKMBnOzzp87pBF9BQBHB.jpg' },
+      { name: 'Mank',                            meta: '2020 · 7.0 ★', emoji: '🎞️', img: 'https://image.tmdb.org/t/p/w500/4xwDe4piRaF6rFGBiH0P8pSMCNH.jpg' },
+    ]
+  }
+};
+
+// ════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════
+let cat, catKey, deck, champion, championWins, round, total, defeated, picking;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ════════════════════════════════════════════
+//  NAV
+// ════════════════════════════════════════════
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function goHome() { show('home'); }
+
+// ════════════════════════════════════════════
+//  GAME
+// ════════════════════════════════════════════
+function startGame(key) {
+  catKey       = key;
+  cat          = CATEGORIES[key];
+  deck         = shuffle([...cat.items]);
+  champion     = deck.pop();
+  championWins = 0;
+  defeated     = [];
+  round        = 0;
+  total        = cat.items.length;
+  picking      = false;
+  switchCount  = 0;
+  keepCount    = 0;
+
+  document.getElementById('game-cat-label').textContent = cat.name;
+  document.getElementById('tamil-toast').classList.remove('visible');
+  show('game');
+  nextRound();
+}
+
+function nextRound() {
+  if (!deck.length) { showResult(); return; }
+  const challenger = deck.pop();
+  round++;
+
+  const pct = ((total - deck.length - 1) / (total - 1)) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('game-round-label').textContent = `Round ${round} of ${total - 1}`;
+  document.getElementById('streak-count').textContent = championWins;
+
+  setCard('left',  champion,   true,  championWins);
+  setCard('right', challenger, false, 0);
+
+  // animate challenger
+  const rc = document.getElementById('card-right');
+  rc.classList.remove('slide-in');
+  void rc.offsetWidth;
+  rc.classList.add('slide-in');
+
+  document.getElementById('card-right')._item = challenger;
+  document.getElementById('card-left')._item  = champion;
+
+  // First round toast
+  if (round === 1) showToast(pick_random(COMMENTARY.start));
+}
+
+function loadImg(imgEl, phEl, phEmojiEl, phNameEl, item) {
+  imgEl.style.display = 'none';
+  phEl.style.display  = 'flex';
+  phEmojiEl.textContent = item.emoji || '⭐';
+  if (phNameEl) phNameEl.textContent = item.name;
+  imgEl.onload  = () => { imgEl.style.display = 'block'; phEl.style.display = 'none'; };
+  imgEl.onerror = () => { imgEl.style.display = 'none'; phEl.style.display = 'flex'; };
+  imgEl.src = ''; 
+  setTimeout(() => { imgEl.src = item.img; imgEl.alt = item.name; }, 10);
+}
+
+function setCard(side, item, isChamp, wins) {
+  loadImg(
+    document.getElementById(`${side}-img`),
+    document.getElementById(`${side}-ph`),
+    document.getElementById(`${side}-ph-emoji`),
+    document.getElementById(`${side}-ph-name`),
+    item
+  );
+  document.getElementById(`${side}-name`).textContent = item.name;
+  document.getElementById(`${side}-meta`).textContent = item.meta;
+  if (side === 'left') {
+    const wEl  = document.getElementById('left-wins');
+    const crown= document.getElementById('left-crown');
+    if (wins > 0) {
+      wEl.style.display = 'inline-flex';
+      document.getElementById('left-wins-n').textContent = wins;
+      crown.style.display = 'block';
+    } else {
+      wEl.style.display = crown.style.display = 'none';
+    }
+  }
+  document.getElementById(`card-${side}`).classList.remove('chosen', 'rejected');
+}
+
+function pick(side) {
+  if (picking) return;
+  picking = true;
+
+  const winnerItem = document.getElementById(`card-${side}`)._item;
+  const loserItem  = document.getElementById(`card-${side === 'left' ? 'right' : 'left'}`)._item;
+
+  document.getElementById(`card-${side}`).classList.add('chosen');
+  document.getElementById(`card-${side === 'left' ? 'right' : 'left'}`).classList.add('rejected');
+  defeated.push(loserItem);
+
+  // Tamil commentary after pick
+  const commentary = getCommentary(winnerItem, loserItem, side, catKey);
+  showToast(commentary);
+
+  setTimeout(() => {
+    if (side === 'right') { champion = winnerItem; championWins = 1; }
+    else { championWins++; }
+    picking = false;
+    nextRound();
+  }, 430);
+}
+
+// ════════════════════════════════════════════
+//  RESULT
+// ════════════════════════════════════════════
+function showResult() {
+  show('result');
+
+  loadImg(
+    document.getElementById('winner-img'),
+    document.getElementById('winner-ph'),
+    document.getElementById('winner-ph-emoji'),
+    null, champion
+  );
+
+  document.getElementById('winner-name').textContent = champion.name;
+  document.getElementById('winner-sub').textContent  = `Survived ${championWins} challenge${championWins !== 1 ? 's' : ''}`;
+  document.getElementById('result-headline').textContent = `${champion.name} wins! 🏆`;
+  document.getElementById('stat-wins').textContent   = championWins;
+  document.getElementById('stat-rounds').textContent = round;
+
+  const rarityPct = Math.round((championWins / (total - 1)) * 100);
+  document.getElementById('stat-rarity').textContent =
+    rarityPct >= 80 ? '🔥 Rare' : rarityPct >= 50 ? '⚡ Bold' : '😊 Common';
+
+  // End card Tamil quote
+  const endQ = getEndQuote();
+  document.getElementById('result-tamil-quote').textContent = endQ.text;
+  document.getElementById('result-tamil-attr').textContent  = '— ' + endQ.attr;
+
+  // Podium
+  const ranked = [champion, ...[...defeated].reverse()];
+  const medals = ['🥇', '🥈', '🥉'];
+  const podium = document.getElementById('podium');
+  podium.innerHTML = '';
+
+  ranked.forEach((item, i) => {
+    const pct = Math.max(8, Math.round(((ranked.length - i) / ranked.length) * 100));
+    const div = document.createElement('div');
+    div.className = 'podium-item fade-up';
+    div.style.animationDelay = (i * 0.04) + 's';
+    div.style.opacity = '0';
+
+    const thumb = document.createElement('div');
+    thumb.className = 'podium-thumb';
+    if (i < 3) {
+      thumb.textContent = medals[i];
+    } else {
+      const tImg = document.createElement('img');
+      tImg.src = item.img; tImg.alt = item.name;
+      tImg.onerror = () => { thumb.textContent = item.emoji; };
+      thumb.appendChild(tImg);
+    }
+
+    div.innerHTML = `<div class="podium-rank" style="color:${i < 3 ? '#f59e0b' : 'var(--muted)'}">${i+1}</div>`;
+    div.appendChild(thumb);
+    div.innerHTML += `
+      <div class="podium-info">
+        <div class="podium-name">${item.name}</div>
+        <div class="podium-sub">${item.meta}</div>
+      </div>
+      <div class="podium-bar-track"><div class="podium-bar-fill" style="width:${pct}%"></div></div>`;
+    podium.appendChild(div);
+  });
+}
+
+// ════════════════════════════════════════════
+//  SHARE
+// ════════════════════════════════════════════
+function shareResult() {
+  const endQ = getEndQuote();
+  const txt = `🏆 My This or That result — ${cat.name}\n👑 ${champion.name} beat ${championWins} challengers!\n\n"${endQ.text}"\n\nWhat's yours? #ThisOrThat`;
+  if (navigator.share) {
+    navigator.share({ title: 'This or That', text: txt }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt);
+    alert('Result copied! Share it anywhere 🎉');
+  }
+}
+
+function playAgain() { startGame(catKey); }
+</script>
+</body>
+</html>
