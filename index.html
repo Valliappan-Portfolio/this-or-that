@@ -213,6 +213,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .btn-small-clear{background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--muted);font-size:11px;cursor:pointer;transition:all 0.15s}
 .btn-small-clear:hover{border-color:#ff3e6c;color:#ff3e6c}
 
+.genre-btn {
+  background: var(--card-bg); border: 1px solid rgba(255,62,108,0.3);
+  border-radius: 20px; padding: 8px 16px; color: var(--text);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all 0.15s; font-family: inherit;
+}
+.genre-btn:hover { background: rgba(255,62,108,0.1); border-color: #ff3e6c; }
+
 /* ── ANIMATIONS ── */
 @keyframes slideInRight{from{transform:translateX(100px) scale(0.94);opacity:0}to{transform:translateX(0) scale(1);opacity:1}}
 @keyframes pulseGlow{0%,100%{box-shadow:0 0 24px rgba(255,62,108,0.12)}50%{box-shadow:0 0 48px rgba(255,62,108,0.35)}}
@@ -269,6 +277,24 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="cat-emoji">🎬</div>
       <div class="cat-name">Tamil Directors</div>
       <div class="cat-count" id="directors-count">Loading...</div>
+    </div>
+    <div class="cat-card" onclick="showGenrePicker()">
+      <div class="cat-badge badge-live">Live</div>
+      <div class="cat-emoji">🍿</div>
+      <div class="cat-name">Kollywood Movies</div>
+      <div class="cat-count">Pick a genre</div>
+    </div>
+  </div>
+
+  <!-- Genre picker row (hidden until clicked) -->
+  <div id="genre-picker" style="display:none;width:100%;margin-top:10px">
+    <div class="section-label" style="margin-top:0">Pick a genre</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <button class="genre-btn" onclick="pickGenre('thriller',28,'Thriller')">🔪 Thriller</button>
+      <button class="genre-btn" onclick="pickGenre('romance',10749,'Romance')">❤️ Romance</button>
+      <button class="genre-btn" onclick="pickGenre('action',28,'Action')">💥 Action</button>
+      <button class="genre-btn" onclick="pickGenre('comedy',35,'Comedy')">😂 Comedy</button>
+      <button class="genre-btn" onclick="pickGenre('drama',18,'Drama')">🎭 Drama</button>
     </div>
   </div>
 
@@ -433,31 +459,53 @@ const sbHeaders = {
 };
 
 async function sbInsert(row) {
-  const res = await fetch(`${SB_URL}/rest/v1/results`, {
-    method: 'POST',
-    headers: { ...sbHeaders, 'Prefer': 'return=minimal' },
-    body: JSON.stringify(row)
-  });
-  return res.ok;
+  try {
+    const res = await fetch(SB_URL + '/rest/v1/results', {
+      method: 'POST',
+      headers: { ...sbHeaders, 'Prefer': 'return=minimal' },
+      body: JSON.stringify(row)
+    });
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('SB insert failed:', res.status, err);
+      alert('Save failed (' + res.status + '): ' + err);
+      return false;
+    }
+    return true;
+  } catch(e) {
+    console.error('SB insert error:', e);
+    alert('Network error: ' + e.message);
+    return false;
+  }
 }
 
 async function sbFetch(catKey) {
-  const filter = catKey ? `&category_key=eq.${encodeURIComponent(catKey)}` : '';
-  const res = await fetch(
-    `${SB_URL}/rest/v1/results?select=*&order=created_at.desc&limit=200${filter}`,
-    { headers: sbHeaders }
-  );
-  if (!res.ok) return [];
-  return res.json();
+  try {
+    const filter = catKey ? '&category_key=eq.' + encodeURIComponent(catKey) : '';
+    const res = await fetch(
+      SB_URL + '/rest/v1/results?select=*&order=created_at.desc&limit=200' + filter,
+      { headers: sbHeaders }
+    );
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('SB fetch failed:', res.status, err);
+      return [];
+    }
+    return res.json();
+  } catch(e) {
+    console.error('SB fetch error:', e);
+    return [];
+  }
 }
 
 async function sbDelete() {
-  // Only deletes current user's results (by username stored locally)
   const name = getUsername();
   if (!name) return;
-  await fetch(`${SB_URL}/rest/v1/results?username=eq.${encodeURIComponent(name)}`, {
-    method: 'DELETE', headers: sbHeaders
-  });
+  try {
+    await fetch(SB_URL + '/rest/v1/results?username=eq.' + encodeURIComponent(name), {
+      method: 'DELETE', headers: sbHeaders
+    });
+  } catch(e) { console.error('SB delete error:', e); }
 }
 
 // ═══════════════════════════════════════════
@@ -574,6 +622,64 @@ async function buildDirectorsCategory(){
   CATEGORIES['directors']={name:'Tamil Directors',emoji:'🎬',items};
   const el=document.getElementById('directors-count');
   if(el) el.textContent=`${items.length} directors`;
+}
+
+// ═══════════════════════════════════════════
+//  KOLLYWOOD GENRE MOVIES (TMDb)
+// ═══════════════════════════════════════════
+// Tamil language ID on TMDb = 20 (ISO 639-1: ta)
+const TMDB_TAMIL_LANG = 'ta';
+const TMDB_REGION = 'IN';
+
+// Genre IDs from TMDb: Action=28, Romance=10749, Comedy=35, Drama=18, Thriller=53
+const GENRE_MAP = {
+  thriller: { id: 53,    name: 'Kollywood Thrillers',  emoji: '🔪' },
+  romance:  { id: 10749, name: 'Kollywood Romances',   emoji: '❤️' },
+  action:   { id: 28,    name: 'Kollywood Action',     emoji: '💥' },
+  comedy:   { id: 35,    name: 'Kollywood Comedies',   emoji: '😂' },
+  drama:    { id: 18,    name: 'Kollywood Dramas',     emoji: '🎭' },
+};
+
+function showGenrePicker() {
+  const el = document.getElementById('genre-picker');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+async function pickGenre(genreKey, genreId, genreLabel) {
+  document.getElementById('genre-picker').style.display = 'none';
+  const catKey = 'genre_' + genreKey;
+  const g = GENRE_MAP[genreKey];
+
+  // Show loading state
+  if (!CATEGORIES[catKey] || !CATEGORIES[catKey].items.length) {
+    // fetch from TMDb
+    const url = TMDB_BASE + '/discover/movie?api_key=' + TMDB_KEY +
+      '&with_original_language=' + TMDB_TAMIL_LANG +
+      '&with_genres=' + genreId +
+      '&sort_by=vote_average.desc' +
+      '&vote_count.gte=500' +
+      '&region=' + TMDB_REGION +
+      '&page=1';
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      const items = (data.results || []).slice(0, 20).map(m => ({
+        name: m.title,
+        meta: (m.release_date || '').slice(0, 4) + (m.vote_average ? ' · ' + m.vote_average.toFixed(1) + ' ★' : ''),
+        emoji: g.emoji,
+        img: m.poster_path ? TMDB_IMG + m.poster_path : ''
+      })).filter(m => m.name);
+      CATEGORIES[catKey] = { name: g.name, emoji: g.emoji, items };
+    } catch(e) {
+      alert('Could not load movies. Check connection.');
+      return;
+    }
+  }
+
+  pendingCatKey = catKey;
+  document.getElementById('tier-cat-emoji').textContent = g.emoji;
+  document.getElementById('tier-cat-name').textContent = g.name;
+  show('tier-pick');
 }
 
 // ═══════════════════════════════════════════
