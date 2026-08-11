@@ -7,514 +7,264 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-:root {
-  --bg: #0a0a0f;
-  --surface: #13131a;
-  --card-bg: #1a1a24;
-  --accent: #ff3e6c;
-  --accent2: #7c3aed;
-  --gold: #f59e0b;
-  --text: #f0f0f5;
-  --muted: #6b7280;
-  --border: rgba(255,255,255,0.08);
-  --radius: 22px;
+:root{
+  --bg:#0a0a0f;--surface:#13131a;--card-bg:#1a1a24;
+  --accent:#ff3e6c;--accent2:#7c3aed;--gold:#f59e0b;
+  --text:#f0f0f5;--muted:#6b7280;--border:rgba(255,255,255,0.08);
+  --radius:22px;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-x: hidden;
-}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
 
-.screen { display: none; width: 100%; max-width: 680px; flex-direction: column; align-items: center; padding: 0 20px 60px; }
-.screen.active { display: flex; }
+.screen{display:none;width:100%;max-width:680px;flex-direction:column;align-items:center;padding:0 20px 60px}
+.screen.active{display:flex}
+
+/* ── USERNAME MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);
+  display:flex;align-items:center;justify-content:center;
+  z-index:1000;padding:24px;backdrop-filter:blur(4px);
+}
+.modal-overlay.hidden{display:none}
+.modal-box{
+  background:#1a1a2e;border:1px solid rgba(124,58,237,0.4);
+  border-radius:24px;padding:32px 28px;width:100%;max-width:400px;
+  text-align:center;
+}
+.modal-emoji{font-size:48px;margin-bottom:16px}
+.modal-title{font-size:22px;font-weight:900;margin-bottom:8px;
+  background:linear-gradient(135deg,#ff3e6c,#7c3aed);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+.modal-input{
+  width:100%;background:var(--bg);border:1.5px solid rgba(124,58,237,0.4);
+  border-radius:14px;padding:15px 18px;color:var(--text);font-size:16px;
+  font-family:inherit;outline:none;text-align:center;letter-spacing:0.5px;
+  transition:border-color 0.2s;margin-bottom:16px;
+}
+.modal-input:focus{border-color:#7c3aed}
+.modal-input::placeholder{color:var(--muted)}
+.modal-btn{
+  width:100%;padding:16px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,#ff3e6c,#7c3aed);
+  color:#fff;font-size:15px;font-weight:800;cursor:pointer;
+  transition:opacity 0.15s,transform 0.15s;letter-spacing:0.3px;
+}
+.modal-btn:hover{opacity:0.88;transform:translateY(-1px)}
+.modal-welcome{font-size:11px;color:var(--muted);margin-top:12px}
 
 /* ── HOME ── */
-.home-header { width: 100%; padding: 44px 0 10px; text-align: center; }
-.logo {
-  font-size: 38px; font-weight: 900; letter-spacing: -1.5px;
-  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.tagline { font-size: 12px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; }
-
-.section-label {
-  font-size: 10px; font-weight: 700; color: var(--muted);
-  letter-spacing: 2px; text-transform: uppercase;
-  margin: 32px 0 14px; align-self: flex-start; width: 100%;
+.home-header{width:100%;padding:44px 0 10px;text-align:center}
+.logo{font-size:38px;font-weight:900;letter-spacing:-1.5px;
+  background:linear-gradient(135deg,#ff3e6c,#7c3aed);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tagline{font-size:12px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:8px}
+.welcome-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);
+  border-radius:20px;padding:6px 14px;margin-top:12px;
+  font-size:13px;font-weight:600;color:#a78bfa;
 }
 
-.category-grid { width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.section-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin:32px 0 14px;align-self:flex-start;width:100%}
 
-.cat-card {
-  background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 18px; padding: 20px 16px; cursor: pointer;
-  transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
-  position: relative; overflow: hidden;
+.category-grid{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cat-card{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:20px 16px;cursor:pointer;
+  transition:transform 0.15s,border-color 0.2s,box-shadow 0.2s;position:relative;overflow:hidden;
 }
-.cat-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.18); box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
-.cat-emoji { font-size: 32px; margin-bottom: 10px; }
-.cat-name { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
-.cat-count { font-size: 11px; color: var(--muted); margin-top: 3px; }
-.cat-badge {
-  position: absolute; top: 10px; right: 10px;
-  font-size: 9px; font-weight: 700; letter-spacing: 1px;
-  padding: 2px 7px; border-radius: 20px; text-transform: uppercase;
-}
-.badge-live { background: rgba(255,62,108,0.15); color: #ff3e6c; border: 1px solid rgba(255,62,108,0.25); }
-.badge-soon { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
-.cat-card.disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+.cat-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,0.18);box-shadow:0 10px 30px rgba(0,0,0,0.35)}
+.cat-emoji{font-size:32px;margin-bottom:10px}
+.cat-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+.cat-count{font-size:11px;color:var(--muted);margin-top:3px}
+.cat-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:20px;text-transform:uppercase}
+.badge-live{background:rgba(255,62,108,0.15);color:#ff3e6c;border:1px solid rgba(255,62,108,0.25)}
 
-.how-box {
-  width: 100%; background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 18px; padding: 20px; display: flex; gap: 0;
-}
-.how-row { flex: 1; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; padding: 0 12px; }
-.how-row + .how-row { border-left: 1px solid var(--border); }
-.how-num {
-  width: 30px; height: 30px; border-radius: 10px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700; margin-bottom: 4px;
-}
-.how-num.n1 { background: rgba(255,62,108,0.15); color: #ff3e6c; }
-.how-num.n2 { background: rgba(124,58,237,0.15); color: #a78bfa; }
-.how-num.n3 { background: rgba(245,158,11,0.15); color: var(--gold); }
-.how-text { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.how-box{width:100%;background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:20px;display:flex;gap:0}
+.how-row{flex:1;display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center;padding:0 12px}
+.how-row+.how-row{border-left:1px solid var(--border)}
+.how-num{width:30px;height:30px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin-bottom:4px}
+.how-num.n1{background:rgba(255,62,108,0.15);color:#ff3e6c}
+.how-num.n2{background:rgba(124,58,237,0.15);color:#a78bfa}
+.how-num.n3{background:rgba(245,158,11,0.15);color:var(--gold)}
+.how-text{font-size:12px;color:var(--muted);line-height:1.5}
 
 /* ── GAME ── */
-#game { padding-top: 0; }
+#game{padding-top:0}
+.game-header{width:100%;display:flex;align-items:center;padding:22px 0 16px;gap:14px}
+.back-btn{background:var(--card-bg);border:1px solid var(--border);color:var(--text);width:42px;height:42px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;transition:background 0.15s}
+.back-btn:hover{background:var(--surface)}
+.game-title-wrap{flex:1;min-width:0}
+.game-category{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase}
+.game-round-label{font-size:18px;font-weight:700;margin-top:2px}
+.streak-pill{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:var(--gold);font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0}
 
-.game-header {
-  width: 100%; display: flex; align-items: center;
-  padding: 22px 0 16px; gap: 14px;
-}
-.back-btn {
-  background: var(--card-bg); border: 1px solid var(--border); color: var(--text);
-  width: 42px; height: 42px; border-radius: 12px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; flex-shrink: 0; transition: background 0.15s;
-}
-.back-btn:hover { background: var(--surface); }
-.game-title-wrap { flex: 1; min-width: 0; }
-.game-category { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
-.game-round-label { font-size: 18px; font-weight: 700; margin-top: 2px; }
-.streak-pill {
-  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);
-  color: var(--gold); font-size: 12px; font-weight: 700;
-  padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 5px;
-  white-space: nowrap; flex-shrink: 0;
-}
+.progress-wrap{width:100%;height:4px;background:var(--border);border-radius:2px;margin-bottom:22px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#ff3e6c,#7c3aed);border-radius:2px;transition:width 0.5s cubic-bezier(.4,0,.2,1)}
 
-.progress-wrap { width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 22px; overflow: hidden; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, #ff3e6c, #7c3aed); border-radius: 2px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+.tamil-toast{width:100%;background:linear-gradient(135deg,rgba(124,58,237,0.18),rgba(255,62,108,0.12));border:1px solid rgba(124,58,237,0.3);border-radius:14px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;opacity:0;transform:translateY(-6px);transition:opacity 0.35s ease,transform 0.35s ease;min-height:52px}
+.tamil-toast.visible{opacity:1;transform:translateY(0)}
+.tamil-toast-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+.tamil-toast-text{font-size:13px;font-weight:600;color:#e0d4ff;line-height:1.5;flex:1}
 
-/* Tamil Commentary Toast */
-.tamil-toast {
-  width: 100%;
-  background: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(255,62,108,0.12));
-  border: 1px solid rgba(124,58,237,0.3);
-  border-radius: 14px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  opacity: 0;
-  transform: translateY(-6px);
-  transition: opacity 0.35s ease, transform 0.35s ease;
-  min-height: 52px;
-}
-.tamil-toast.visible { opacity: 1; transform: translateY(0); }
-.tamil-toast-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
-.tamil-toast-text { font-size: 13px; font-weight: 600; color: #e0d4ff; line-height: 1.5; flex: 1; }
-.tamil-toast-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.vs-row{display:flex;align-items:center;gap:16px;width:100%;margin-bottom:16px}
+.vs-line{flex:1;height:1px;background:var(--border)}
+.vs-badge{font-size:13px;font-weight:900;color:var(--muted);letter-spacing:2px}
 
-/* VS row */
-.vs-row { display: flex; align-items: center; gap: 16px; width: 100%; margin-bottom: 16px; }
-.vs-line { flex: 1; height: 1px; background: var(--border); }
-.vs-badge { font-size: 13px; font-weight: 900; color: var(--muted); letter-spacing: 2px; }
+.cards-arena{width:100%;display:flex;gap:18px;justify-content:center}
+.player-card{flex:1;max-width:290px;height:420px;border-radius:var(--radius);position:relative;cursor:pointer;overflow:hidden;border:1.5px solid var(--border);transition:transform 0.2s cubic-bezier(.4,0,.2,1),border-color 0.2s,box-shadow 0.2s;background:var(--card-bg);user-select:none}
+.player-card:hover{transform:scale(1.025);border-color:rgba(255,255,255,0.22);box-shadow:0 16px 48px rgba(0,0,0,0.5)}
+.player-card:active{transform:scale(0.97)}
+.player-card img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* CARDS — bigger */
-.cards-arena { width: 100%; display: flex; gap: 18px; justify-content: center; }
+.card-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#1e1e2e 0%,#2a1a3a 100%);gap:12px;padding:20px}
+.card-placeholder-emoji{font-size:64px}
+.card-placeholder-name{font-size:14px;color:rgba(255,255,255,0.4);text-align:center;font-weight:600}
 
-.player-card {
-  flex: 1; max-width: 290px; height: 420px;
-  border-radius: var(--radius); position: relative; cursor: pointer;
-  overflow: hidden; border: 1.5px solid var(--border);
-  transition: transform 0.2s cubic-bezier(.4,0,.2,1), border-color 0.2s, box-shadow 0.2s;
-  background: var(--card-bg); user-select: none;
-}
-.player-card:hover { transform: scale(1.025); border-color: rgba(255,255,255,0.22); box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
-.player-card:active { transform: scale(0.97); }
-.player-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-gradient{position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to top,rgba(0,0,0,0.96) 0%,rgba(0,0,0,0.55) 50%,transparent 100%);pointer-events:none}
+.card-info{position:absolute;bottom:0;left:0;right:0;padding:14px 16px 18px;pointer-events:none}
+.card-name{font-size:18px;font-weight:800;color:#fff;line-height:1.2}
+.card-meta{font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px}
+.card-wins-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.35);color:var(--gold);font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;margin-top:6px}
+.champion-tag{position:absolute;top:12px;left:12px;background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.35);border-radius:9px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.5px;text-transform:uppercase}
 
-.card-placeholder {
-  width: 100%; height: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: linear-gradient(160deg, #1e1e2e 0%, #2a1a3a 100%);
-  gap: 12px; padding: 20px;
-}
-.card-placeholder-emoji { font-size: 64px; }
-.card-placeholder-name { font-size: 14px; color: rgba(255,255,255,0.4); text-align: center; font-weight: 600; }
-
-.card-gradient {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 55%;
-  background: linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.55) 50%, transparent 100%);
-  pointer-events: none;
-}
-.card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 14px 16px 18px; pointer-events: none; }
-.card-name { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.2; }
-.card-meta { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; }
-.card-wins-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.35);
-  color: var(--gold); font-size: 10px; font-weight: 700;
-  padding: 3px 8px; border-radius: 8px; margin-top: 6px;
-}
-.champion-tag {
-  position: absolute; top: 12px; left: 12px;
-  background: rgba(245,158,11,0.18); border: 1px solid rgba(245,158,11,0.35);
-  border-radius: 9px; padding: 4px 10px;
-  font-size: 10px; font-weight: 700; color: var(--gold);
-  letter-spacing: 0.5px; text-transform: uppercase;
-}
-
-.tap-hint { text-align: center; font-size: 12px; color: var(--muted); margin-top: 18px; width: 100%; }
-
-.player-card.chosen { border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(255,62,108,0.2) !important; }
-.player-card.rejected { opacity: 0.2; transform: scale(0.95); }
-
-/* ── RESULT ── */
-#result { padding-top: 0; }
-.result-header { width: 100%; padding: 36px 0 18px; text-align: center; }
-.result-eyebrow { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-.result-headline {
-  font-size: 30px; font-weight: 900; line-height: 1.15;
-  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-
-.winner-wrap { position: relative; display: inline-block; margin-bottom: 22px; }
-.winner-crown { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 36px; z-index: 2; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.9)); }
-.winner-card {
-  width: 240px; height: 360px; border-radius: 26px; overflow: hidden;
-  border: 2px solid rgba(255,62,108,0.5); background: var(--card-bg);
-  animation: pulseGlow 2s ease-in-out infinite;
-  position: relative;
-}
-.winner-card img { width: 100%; height: 100%; object-fit: cover; }
-.winner-name-overlay {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 55px 18px 20px;
-  background: linear-gradient(to top, rgba(0,0,0,0.97), transparent);
-  text-align: center;
-}
-.winner-name { font-size: 22px; font-weight: 900; color: #fff; }
-.winner-sub { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 3px; }
-
-
-
-.stat-row { width: 100%; display: flex; gap: 10px; margin-bottom: 22px; }
-.stat-pill {
-  flex: 1; background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 16px; padding: 16px 10px; text-align: center;
-}
-.stat-number {
-  font-size: 28px; font-weight: 900;
-  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.stat-label { font-size: 10px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 1px; }
-
-.podium-section { width: 100%; margin-bottom: 26px; }
-.podium-item {
-  background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 13px; padding: 11px 16px;
-  display: flex; align-items: center; gap: 13px; margin-bottom: 8px;
-}
-.podium-rank { font-size: 14px; font-weight: 900; width: 24px; text-align: center; flex-shrink: 0; }
-.podium-thumb {
-  width: 46px; height: 46px; border-radius: 50%; overflow: hidden;
-  background: var(--surface); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px;
-}
-.podium-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.podium-info { flex: 1; min-width: 0; }
-.podium-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.podium-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
-.podium-bar-track { width: 60px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
-.podium-bar-fill { height: 100%; background: linear-gradient(90deg, #ff3e6c, #7c3aed); border-radius: 2px; }
-
-/* Abdul Kalam blessing */
-.kalam-wrap {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 24px;
-}
-.kalam-img {
-  width: 100%;
-  max-width: 420px;
-  height: 260px;
-  object-fit: cover;
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  display: block;
-}
-.kalam-quote {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-  text-align: center;
-  margin-top: 14px;
-  line-height: 1.6;
-  padding: 0 4px;
-}
-.kalam-attr {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 4px;
-  letter-spacing: 1px;
-}
-
-/* Dominant winner banner */
-.dominant-banner {
-  width: 100%;
-  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(255,62,108,0.1));
-  border: 1px solid rgba(245,158,11,0.3);
-  border-radius: 14px;
-  padding: 14px 18px;
-  margin-bottom: 16px;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 700;
-  color: #fde68a;
-  line-height: 1.5;
-}
-
-/* Chitraguptan sign-off */
-.chitraguptan-banner {
-  width: 100%;
-  background: linear-gradient(135deg, #1a0a24, #240a1a);
-  border: 1px solid rgba(255,62,108,0.25);
-  border-radius: 14px;
-  padding: 16px 20px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-.chitraguptan-text {
-  font-size: 14px;
-  font-weight: 700;
-  color: #ff8fab;
-  line-height: 1.6;
-}
-
-/* Teams ping footer */
-.teams-footer {
-  width: 100%;
-  margin-top: 16px;
-  padding: 14px 18px;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  font-size: 12px;
-  color: var(--muted);
-  text-align: center;
-  line-height: 1.6;
-}
-
-.btn-primary {
-  width: 100%; padding: 17px; border: none; border-radius: 15px;
-  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
-  color: #fff; font-size: 16px; font-weight: 700; cursor: pointer;
-  transition: opacity 0.15s, transform 0.15s; margin-bottom: 10px;
-}
-.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
-.btn-secondary {
-  width: 100%; padding: 15px; border: 1px solid var(--border); border-radius: 15px;
-  background: var(--card-bg); color: var(--text); font-size: 14px; font-weight: 600;
-  cursor: pointer; transition: background 0.15s; margin-bottom: 10px;
-}
-.btn-secondary:hover { background: var(--surface); }
-.share-nudge { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+.tap-hint{text-align:center;font-size:12px;color:var(--muted);margin-top:18px;width:100%}
+.player-card.chosen{border-color:var(--accent)!important;box-shadow:0 0 0 3px rgba(255,62,108,0.2)!important}
+.player-card.rejected{opacity:0.2;transform:scale(0.95)}
 
 /* ── TIER PICKER ── */
-#tier-pick { padding-top: 0; }
+#tier-pick{padding-top:0}
+.tier-back-row{width:100%;display:flex;align-items:center;padding:18px 0 4px}
+.tier-header{width:100%;padding:36px 0 6px;text-align:center}
+.tier-cat-emoji{font-size:40px;margin-bottom:10px}
+.tier-cat-name{font-size:22px;font-weight:900}
+.tier-cat-sub{font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:1px}
+.tier-grid{width:100%;display:flex;flex-direction:column;gap:12px;margin-top:28px}
+.tier-card{width:100%;background:var(--card-bg);border:1.5px solid var(--border);border-radius:18px;padding:20px 22px;cursor:pointer;transition:transform 0.15s,border-color 0.2s,box-shadow 0.2s;display:flex;align-items:center;gap:18px;position:relative;overflow:hidden}
+.tier-card:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,0.35)}
+.tier-card:active{transform:scale(0.98)}
+.tier-card.t1{border-color:rgba(255,62,108,0.3)}.tier-card.t1:hover{border-color:rgba(255,62,108,0.6)}
+.tier-card.t2{border-color:rgba(124,58,237,0.3)}.tier-card.t2:hover{border-color:rgba(124,58,237,0.6)}
+.tier-card.t3{border-color:rgba(245,158,11,0.3)}.tier-card.t3:hover{border-color:rgba(245,158,11,0.6)}
+.tier-glow{position:absolute;top:0;left:0;width:4px;height:100%;border-radius:18px 0 0 18px}
+.t1 .tier-glow{background:linear-gradient(180deg,#ff3e6c,#ff8fab)}
+.t2 .tier-glow{background:linear-gradient(180deg,#7c3aed,#a78bfa)}
+.t3 .tier-glow{background:linear-gradient(180deg,#f59e0b,#fde68a)}
+.tier-emoji{font-size:34px;flex-shrink:0}
+.tier-info{flex:1}
+.tier-name{font-size:15px;font-weight:800;margin-bottom:3px}
+.tier-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.tier-count{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0}
+.t1 .tier-count{background:rgba(255,62,108,0.12);color:#ff3e6c;border:1px solid rgba(255,62,108,0.25)}
+.t2 .tier-count{background:rgba(124,58,237,0.12);color:#a78bfa;border:1px solid rgba(124,58,237,0.25)}
+.t3 .tier-count{background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.25)}
 
-.tier-header { width: 100%; padding: 36px 0 6px; text-align: center; }
-.tier-cat-emoji { font-size: 40px; margin-bottom: 10px; }
-.tier-cat-name { font-size: 22px; font-weight: 900; }
-.tier-cat-sub { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 1px; }
+/* ── RESULT ── */
+#result{padding-top:0}
+.result-header{width:100%;padding:36px 0 18px;text-align:center}
+.result-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.result-headline{font-size:30px;font-weight:900;line-height:1.15;background:linear-gradient(135deg,#ff3e6c,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-.tier-grid { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+.kalam-wrap{width:100%;display:flex;flex-direction:column;align-items:center;margin-bottom:24px}
+.kalam-img{width:100%;max-width:420px;height:260px;object-fit:cover;border-radius:18px;border:1px solid var(--border);display:block}
+.kalam-quote{font-size:15px;font-weight:700;color:var(--text);text-align:center;margin-top:14px;line-height:1.6;padding:0 4px}
+.kalam-attr{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:1px}
 
-.tier-card {
-  width: 100%; background: var(--card-bg); border: 1.5px solid var(--border);
-  border-radius: 18px; padding: 20px 22px; cursor: pointer;
-  transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
-  display: flex; align-items: center; gap: 18px; position: relative; overflow: hidden;
-}
-.tier-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
-.tier-card:active { transform: scale(0.98); }
+.winner-wrap{position:relative;display:inline-block;margin-bottom:22px}
+.winner-crown{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:36px;z-index:2;filter:drop-shadow(0 2px 10px rgba(0,0,0,0.9))}
+.winner-card{width:240px;height:360px;border-radius:26px;overflow:hidden;border:2px solid rgba(255,62,108,0.5);background:var(--card-bg);animation:pulseGlow 2s ease-in-out infinite;position:relative}
+.winner-card img{width:100%;height:100%;object-fit:cover}
+.winner-name-overlay{position:absolute;bottom:0;left:0;right:0;padding:55px 18px 20px;background:linear-gradient(to top,rgba(0,0,0,0.97),transparent);text-align:center}
+.winner-name{font-size:22px;font-weight:900;color:#fff}
+.winner-sub{font-size:12px;color:rgba(255,255,255,0.45);margin-top:3px}
 
-.tier-card.t1 { border-color: rgba(255,62,108,0.3); }
-.tier-card.t1:hover { border-color: rgba(255,62,108,0.6); }
-.tier-card.t2 { border-color: rgba(124,58,237,0.3); }
-.tier-card.t2:hover { border-color: rgba(124,58,237,0.6); }
-.tier-card.t3 { border-color: rgba(245,158,11,0.3); }
-.tier-card.t3:hover { border-color: rgba(245,158,11,0.6); }
-
-.tier-glow {
-  position: absolute; top: 0; left: 0; width: 4px; height: 100%; border-radius: 18px 0 0 18px;
-}
-.t1 .tier-glow { background: linear-gradient(180deg, #ff3e6c, #ff8fab); }
-.t2 .tier-glow { background: linear-gradient(180deg, #7c3aed, #a78bfa); }
-.t3 .tier-glow { background: linear-gradient(180deg, #f59e0b, #fde68a); }
-
-.tier-emoji { font-size: 34px; flex-shrink: 0; }
-.tier-info { flex: 1; }
-.tier-name { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
-.tier-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
-.tier-count {
-  font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; flex-shrink: 0;
-}
-.t1 .tier-count { background: rgba(255,62,108,0.12); color: #ff3e6c; border: 1px solid rgba(255,62,108,0.25); }
-.t2 .tier-count { background: rgba(124,58,237,0.12); color: #a78bfa; border: 1px solid rgba(124,58,237,0.25); }
-.t3 .tier-count { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
-
-.tier-back-row { width: 100%; display: flex; align-items: center; padding: 18px 0 4px; }
+.dominant-banner{width:100%;background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(255,62,108,0.1));border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:14px 18px;margin-bottom:16px;text-align:center;font-size:15px;font-weight:700;color:#fde68a;line-height:1.5}
+.chitraguptan-banner{width:100%;background:linear-gradient(135deg,#1a0a24,#240a1a);border:1px solid rgba(255,62,108,0.25);border-radius:14px;padding:16px 20px;margin-bottom:16px;text-align:center}
+.chitraguptan-text{font-size:14px;font-weight:700;color:#ff8fab;line-height:1.6}
+.teams-footer{width:100%;margin-bottom:16px;padding:14px 18px;background:var(--card-bg);border:1px solid var(--border);border-radius:14px;font-size:12px;color:var(--muted);text-align:center;line-height:1.6}
 
 /* ── LEADERBOARD ── */
-.lb-category-tabs {
-  width: 100%; display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
-}
-.lb-tab {
-  padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
-  cursor: pointer; border: 1px solid var(--border); background: var(--card-bg);
-  color: var(--muted); transition: all 0.15s;
-}
-.lb-tab.active {
-  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
-  border-color: transparent; color: #fff;
-}
+#leaderboard{padding-top:0}
+.lb-category-tabs{width:100%;display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.lb-tab{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--card-bg);color:var(--muted);transition:all 0.15s}
+.lb-tab.active{background:linear-gradient(135deg,#ff3e6c,#7c3aed);border-color:transparent;color:#fff}
+.lb-list{width:100%;display:flex;flex-direction:column;gap:10px}
+.lb-entry{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px}
+.lb-entry.top1{border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.05)}
+.lb-entry.top2{border-color:rgba(192,192,192,0.3)}
+.lb-entry.top3{border-color:rgba(205,127,50,0.3)}
+.lb-rank{font-size:20px;width:32px;text-align:center;flex-shrink:0}
+.lb-thumb{width:48px;height:48px;border-radius:12px;overflow:hidden;background:var(--surface);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px}
+.lb-thumb img{width:100%;height:100%;object-fit:cover}
+.lb-info{flex:1;min-width:0}
+.lb-player{font-size:12px;color:var(--muted);margin-bottom:2px}
+.lb-winner-name{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.lb-wins-badge{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);color:var(--gold);font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0}
+.lb-empty{width:100%;text-align:center;padding:40px 20px;color:var(--muted)}
+.lb-loading{width:100%;text-align:center;padding:30px;color:var(--muted);font-size:13px}
 
-.lb-list { width: 100%; display: flex; flex-direction: column; gap: 10px; }
-
-.lb-entry {
-  background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 16px; padding: 14px 16px;
-  display: flex; align-items: center; gap: 14px;
-}
-.lb-entry.top1 { border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.05); }
-.lb-entry.top2 { border-color: rgba(192,192,192,0.3); }
-.lb-entry.top3 { border-color: rgba(205,127,50,0.3); }
-
-.lb-rank { font-size: 20px; width: 32px; text-align: center; flex-shrink: 0; }
-.lb-thumb {
-  width: 48px; height: 48px; border-radius: 12px; overflow: hidden;
-  background: var(--surface); flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 22px;
-}
-.lb-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.lb-info { flex: 1; min-width: 0; }
-.lb-player { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
-.lb-winner-name { font-size: 15px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lb-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.lb-wins-badge {
-  background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);
-  color: var(--gold); font-size: 10px; font-weight: 700;
-  padding: 3px 8px; border-radius: 8px; white-space: nowrap; flex-shrink: 0;
-}
-
-.lb-empty { width: 100%; text-align: center; padding: 40px 20px; color: var(--muted); }
-
-/* Submit row */
-.submit-row {
-  width: 100%; display: flex; gap: 10px; margin-bottom: 14px; margin-top: 4px;
-}
-.name-input {
-  flex: 1; background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 12px; padding: 13px 16px; color: var(--text); font-size: 14px;
-  font-family: inherit; outline: none; transition: border-color 0.15s;
-}
-.name-input:focus { border-color: rgba(124,58,237,0.5); }
-.name-input::placeholder { color: var(--muted); }
-.submit-btn {
-  background: linear-gradient(135deg, #ff3e6c, #7c3aed);
-  border: none; border-radius: 12px; padding: 13px 20px;
-  color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
-  white-space: nowrap; transition: opacity 0.15s;
-}
-.submit-btn:hover { opacity: 0.88; }
-
-.btn-small-clear {
-  background: transparent; border: 1px solid var(--border);
-  border-radius: 8px; padding: 6px 12px; color: var(--muted);
-  font-size: 11px; cursor: pointer; transition: all 0.15s;
-}
-.btn-small-clear:hover { border-color: #ff3e6c; color: #ff3e6c; }
+.btn-primary{width:100%;padding:17px;border:none;border-radius:15px;background:linear-gradient(135deg,#ff3e6c,#7c3aed);color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s,transform 0.15s;margin-bottom:10px}
+.btn-primary:hover{opacity:0.88;transform:translateY(-1px)}
+.btn-secondary{width:100%;padding:15px;border:1px solid var(--border);border-radius:15px;background:var(--card-bg);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;transition:background 0.15s;margin-bottom:10px}
+.btn-secondary:hover{background:var(--surface)}
+.btn-small-clear{background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--muted);font-size:11px;cursor:pointer;transition:all 0.15s}
+.btn-small-clear:hover{border-color:#ff3e6c;color:#ff3e6c}
 
 /* ── ANIMATIONS ── */
-@keyframes slideInRight {
-  from { transform: translateX(100px) scale(0.94); opacity: 0; }
-  to   { transform: translateX(0) scale(1); opacity: 1; }
-}
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 24px rgba(255,62,108,0.12); }
-  50%       { box-shadow: 0 0 48px rgba(255,62,108,0.35); }
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes toastBounce {
-  0%   { transform: scale(0.95) translateY(-4px); opacity: 0; }
-  60%  { transform: scale(1.02) translateY(1px);  opacity: 1; }
-  100% { transform: scale(1)    translateY(0);    opacity: 1; }
-}
+@keyframes slideInRight{from{transform:translateX(100px) scale(0.94);opacity:0}to{transform:translateX(0) scale(1);opacity:1}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 24px rgba(255,62,108,0.12)}50%{box-shadow:0 0 48px rgba(255,62,108,0.35)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastBounce{0%{transform:scale(0.95) translateY(-4px);opacity:0}60%{transform:scale(1.02) translateY(1px);opacity:1}100%{transform:scale(1) translateY(0);opacity:1}}
+@keyframes modalIn{from{opacity:0;transform:scale(0.92) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
 
-.slide-in { animation: slideInRight 0.34s cubic-bezier(.4,0,.2,1) forwards; }
-.fade-up  { animation: fadeUp 0.4s ease forwards; }
-.toast-bounce { animation: toastBounce 0.4s cubic-bezier(.4,0,.2,1) forwards; }
+.slide-in{animation:slideInRight 0.34s cubic-bezier(.4,0,.2,1) forwards}
+.fade-up{animation:fadeUp 0.4s ease forwards}
+.toast-bounce{animation:toastBounce 0.4s cubic-bezier(.4,0,.2,1) forwards}
+.modal-box{animation:modalIn 0.3s cubic-bezier(.4,0,.2,1) forwards}
 
-@media (prefers-reduced-motion: reduce) {
-  .slide-in, .fade-up, .winner-card, .toast-bounce { animation: none !important; }
-}
-
-@media (max-width: 500px) {
-  .category-grid { grid-template-columns: 1fr 1fr; }
-  .how-box { flex-direction: column; }
-  .how-row + .how-row { border-left: none; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px; }
-  .player-card { height: 340px; }
-  .card-name { font-size: 15px; }
+@media(prefers-reduced-motion:reduce){.slide-in,.fade-up,.winner-card,.toast-bounce,.modal-box{animation:none!important}}
+@media(max-width:500px){
+  .how-box{flex-direction:column}
+  .how-row+.how-row{border-left:none;border-top:1px solid var(--border);padding-top:12px;margin-top:4px}
+  .player-card{height:340px}
+  .card-name{font-size:15px}
 }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════ HOME ══════════════════ -->
+<!-- ══════════ USERNAME MODAL ══════════ -->
+<div class="modal-overlay" id="username-modal">
+  <div class="modal-box">
+    <div class="modal-emoji">🎮</div>
+    <div class="modal-title">Who are you, da?</div>
+    <div class="modal-sub">Enter your name before you judge people.<br>Chitraguptan is watching.</div>
+    <input class="modal-input" id="username-input" type="text" placeholder="Your name here..." maxlength="20" autocomplete="off">
+    <button class="modal-btn" onclick="saveUsername()">Let's Go 🔥</button>
+    <div class="modal-welcome" id="modal-welcome"></div>
+  </div>
+</div>
+
+<!-- ══════════ HOME ══════════ -->
 <div id="home" class="screen active">
   <div class="home-header">
     <div class="logo">This or That</div>
     <div class="tagline">Pick your favourite. Defend it.</div>
+    <div class="welcome-chip" id="welcome-chip">👋 <span id="welcome-name">Player</span></div>
   </div>
 
   <div class="section-label">Choose a category</div>
-  <div class="category-grid" style="grid-template-columns:1fr 1fr">
+  <div class="category-grid">
     <div class="cat-card" onclick="pickTier('heroines')">
       <div class="cat-badge badge-live">Live</div>
       <div class="cat-emoji">💃</div>
       <div class="cat-name">South Indian Heroines</div>
       <div class="cat-count">28 actresses</div>
     </div>
-    <div class="cat-card" onclick="pickTier('directors')" id="directors-cat-card">
+    <div class="cat-card" onclick="pickTier('directors')">
       <div class="cat-badge badge-live">Live</div>
       <div class="cat-emoji">🎬</div>
       <div class="cat-name">Tamil Directors</div>
@@ -524,67 +274,54 @@ body {
 
   <div class="section-label">How it works</div>
   <div class="how-box">
-    <div class="how-row">
-      <div class="how-num n1">1</div>
-      <div class="how-text">Two contenders appear. Tap the one you prefer.</div>
-    </div>
-    <div class="how-row">
-      <div class="how-num n2">2</div>
-      <div class="how-text">Winner stays. A new challenger arrives.</div>
-    </div>
-    <div class="how-row">
-      <div class="how-num n3">3</div>
-      <div class="how-text">Last one standing is your all-time pick.</div>
-    </div>
+    <div class="how-row"><div class="how-num n1">1</div><div class="how-text">Two contenders appear. Tap the one you prefer.</div></div>
+    <div class="how-row"><div class="how-num n2">2</div><div class="how-text">Winner stays. A new challenger arrives.</div></div>
+    <div class="how-row"><div class="how-num n3">3</div><div class="how-text">Last one standing is your all-time pick.</div></div>
   </div>
 
-  <button class="btn-secondary" style="margin-top:16px;width:100%" onclick="showLeaderboardFromHome()">🏆 View Leaderboard</button>
+  <button class="btn-secondary" style="margin-top:16px;width:100%" onclick="showLeaderboardFrom('home')">🏆 View Leaderboard</button>
 </div>
-<div id="tier-pick" class="screen">
-  <div class="tier-back-row">
-    <button class="back-btn" onclick="goHome()">←</button>
-  </div>
 
+<!-- ══════════ TIER PICKER ══════════ -->
+<div id="tier-pick" class="screen">
+  <div class="tier-back-row"><button class="back-btn" onclick="goHome()">←</button></div>
   <div class="tier-header">
     <div class="tier-cat-emoji" id="tier-cat-emoji">💃</div>
     <div class="tier-cat-name" id="tier-cat-name">South Indian Heroines</div>
-    <div class="tier-cat-sub">How many rounds do you want?</div>
+    <div class="tier-cat-sub">How deep are you going?</div>
   </div>
-
   <div class="tier-grid">
     <div class="tier-card t1" onclick="startGameWithTier(1)">
       <div class="tier-glow"></div>
       <div class="tier-emoji">⚡</div>
       <div class="tier-info">
-        <div class="tier-name">Therndhedukkapatta Marumagals</div>
-        <div class="tier-desc">Quick fire — random 10 from the full roster. Decide fast.</div>
+        <div class="tier-name">Quick Swipe</div>
+        <div class="tier-desc">Random 10 — fast, chaotic, no time to think.</div>
       </div>
       <div class="tier-count">~9 picks</div>
     </div>
-
     <div class="tier-card t2" onclick="startGameWithTier(2)">
       <div class="tier-glow"></div>
       <div class="tier-emoji">🎯</div>
       <div class="tier-info">
-        <div class="tier-name">Same Clan</div>
-        <div class="tier-desc">Random 20 — mid-length game with proper competition.</div>
+        <div class="tier-name">In For A Game</div>
+        <div class="tier-desc">Random 20 — proper competition, proper result.</div>
       </div>
       <div class="tier-count">~19 picks</div>
     </div>
-
     <div class="tier-card t3" onclick="startGameWithTier(3)">
       <div class="tier-glow"></div>
       <div class="tier-emoji">👑</div>
       <div class="tier-info">
-        <div class="tier-name">Broad Mind Prospects</div>
-        <div class="tier-desc">All 28 (or 30) — the full gauntlet. No shortcuts, Parama.</div>
+        <div class="tier-name">Let's See Who's Absolute Best</div>
+        <div class="tier-desc">Full roster. No shortcuts. No excuses.</div>
       </div>
-      <div class="tier-count">27+ picks</div>
+      <div class="tier-count">All in</div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════ GAME ══════════════════ -->
+<!-- ══════════ GAME ══════════ -->
 <div id="game" class="screen">
   <div class="game-header">
     <button class="back-btn" onclick="goHome()">←</button>
@@ -594,33 +331,18 @@ body {
     </div>
     <div class="streak-pill">🔥 <span id="streak-count">0</span> wins</div>
   </div>
+  <div class="progress-wrap"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
 
-  <div class="progress-wrap">
-    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-  </div>
-
-  <!-- Tamil Commentary -->
   <div class="tamil-toast" id="tamil-toast">
     <div class="tamil-toast-icon" id="tamil-icon">🎭</div>
-    <div>
-      <div class="tamil-toast-text" id="tamil-text"></div>
-      <div class="tamil-toast-sub" id="tamil-sub"></div>
-    </div>
+    <div><div class="tamil-toast-text" id="tamil-text"></div></div>
   </div>
 
-  <div class="vs-row">
-    <div class="vs-line"></div>
-    <div class="vs-badge">VS</div>
-    <div class="vs-line"></div>
-  </div>
+  <div class="vs-row"><div class="vs-line"></div><div class="vs-badge">VS</div><div class="vs-line"></div></div>
 
   <div class="cards-arena">
-    <!-- Champion -->
     <div class="player-card" id="card-left" onclick="pick('left')">
-      <div class="card-placeholder" id="left-ph">
-        <div class="card-placeholder-emoji" id="left-ph-emoji">👑</div>
-        <div class="card-placeholder-name" id="left-ph-name"></div>
-      </div>
+      <div class="card-placeholder" id="left-ph"><div class="card-placeholder-emoji" id="left-ph-emoji">👑</div><div class="card-placeholder-name" id="left-ph-name"></div></div>
       <img id="left-img" style="display:none" alt="">
       <div class="card-gradient"></div>
       <div class="champion-tag" id="left-crown" style="display:none">👑 Champ</div>
@@ -630,13 +352,8 @@ body {
         <div class="card-wins-badge" id="left-wins" style="display:none">🔥 <span id="left-wins-n">0</span> wins</div>
       </div>
     </div>
-
-    <!-- Challenger -->
     <div class="player-card" id="card-right" onclick="pick('right')">
-      <div class="card-placeholder" id="right-ph">
-        <div class="card-placeholder-emoji" id="right-ph-emoji">⚡</div>
-        <div class="card-placeholder-name" id="right-ph-name"></div>
-      </div>
+      <div class="card-placeholder" id="right-ph"><div class="card-placeholder-emoji" id="right-ph-emoji">⚡</div><div class="card-placeholder-name" id="right-ph-name"></div></div>
       <img id="right-img" style="display:none" alt="">
       <div class="card-gradient"></div>
       <div class="card-info">
@@ -645,31 +362,26 @@ body {
       </div>
     </div>
   </div>
-
   <div class="tap-hint">Tap the card you prefer</div>
 </div>
 
-<!-- ══════════════════ RESULT ══════════════════ -->
+<!-- ══════════ RESULT ══════════ -->
 <div id="result" class="screen">
   <div class="result-header">
     <div class="result-eyebrow">Game over · Your champion</div>
     <div class="result-headline" id="result-headline">Your winner!</div>
   </div>
 
-  <!-- Abdul Kalam blessing -->
   <div class="kalam-wrap">
     <img class="kalam-img" src="kalam.webp" alt="Dr. Abdul Kalam applauding" onerror="this.style.display='none'">
     <div class="kalam-quote">"Thank you Youth of India, You truly are Visionary"</div>
     <div class="kalam-attr">— Dr. A.P.J. Abdul Kalam</div>
   </div>
 
-  <!-- Winner card -->
   <div class="winner-wrap">
     <div class="winner-crown">👑</div>
     <div class="winner-card">
-      <div class="card-placeholder" id="winner-ph">
-        <div class="card-placeholder-emoji" id="winner-ph-emoji">🏆</div>
-      </div>
+      <div class="card-placeholder" id="winner-ph"><div class="card-placeholder-emoji" id="winner-ph-emoji">🏆</div></div>
       <img id="winner-img" style="display:none;width:100%;height:100%;object-fit:cover" alt="">
       <div class="winner-name-overlay">
         <div class="winner-name" id="winner-name">—</div>
@@ -678,643 +390,518 @@ body {
     </div>
   </div>
 
-  <!-- Dominant winner banner (only shown on 80%+ wins) -->
   <div class="dominant-banner" id="dominant-banner" style="display:none"></div>
+  <div class="chitraguptan-banner"><div class="chitraguptan-text">😈 Congrats, Chitraguptan has taken very good note, now let's meet in hell</div></div>
+  <div class="teams-footer">🏃 Thanks for prioritizing my game over your Planner Board. Now pls go before you get one more Teams Ping</div>
 
-  <!-- Chitraguptan sign-off banner -->
-  <div class="chitraguptan-banner">
-    <div class="chitraguptan-text">😈 Congrats, Chitraguptan has taken very good note, now let's meet in hell</div>
-  </div>
-
-  <!-- Teams ping footer — above buttons -->
-  <div class="teams-footer">
-    🏃 Thanks for prioritizing my game over your Planner Board. Now pls go before you get one more Teams Ping
-  </div>
-
-  <!-- Name submit row -->
-  <div class="submit-row">
-    <input class="name-input" id="player-name-input" type="text" placeholder="Enter your name to save result..." maxlength="20">
-    <button class="submit-btn" onclick="submitToLeaderboard()">Save</button>
-  </div>
-
-  <button class="btn-primary" onclick="shareResult()">📤 Share my result</button>
-  <button class="btn-secondary" onclick="showLeaderboard()">🏆 See Leaderboard</button>
+  <button class="btn-primary" onclick="submitAndShare()">💾 Save & Share Result</button>
+  <button class="btn-secondary" onclick="showLeaderboardFrom('result')">🏆 See Leaderboard</button>
   <button class="btn-secondary" onclick="playAgain()">🔄 Play again</button>
   <button class="btn-secondary" onclick="goHome()">🏠 Try another category</button>
 </div>
 
-<!-- ══════════════════ LEADERBOARD ══════════════════ -->
+<!-- ══════════ LEADERBOARD ══════════ -->
 <div id="leaderboard" class="screen">
   <div class="game-header">
-    <button class="back-btn" onclick="show('result')">←</button>
+    <button class="back-btn" id="lb-back-btn">←</button>
     <div class="game-title-wrap">
       <div class="game-category">Friends Picks</div>
       <div class="game-round-label">Leaderboard</div>
     </div>
-    <button class="btn-small-clear" onclick="clearLeaderboard()">Clear</button>
+    <button class="btn-small-clear" onclick="clearAllResults()">Clear</button>
   </div>
-
   <div class="lb-category-tabs" id="lb-tabs"></div>
   <div class="lb-list" id="lb-list"></div>
-
   <div class="lb-empty" id="lb-empty" style="display:none">
     <div style="font-size:40px;margin-bottom:12px">🎮</div>
     <div style="font-size:15px;font-weight:700;margin-bottom:6px">No results yet</div>
-    <div style="font-size:12px;color:var(--muted)">Play a game and submit your result to see it here</div>
+    <div style="font-size:12px;color:var(--muted)">Play a game to be first on the board!</div>
   </div>
 </div>
 
 <script>
-// ════════════════════════════════════════════
-//  TAMIL COMMENTARY ENGINE
-// ════════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  SUPABASE
+// ═══════════════════════════════════════════
+const SB_URL = 'https://bcuhdgldlfwdikgbjyjc.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjdWhkZ2xkbGZ3ZGlrZ2JqeWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0Njk3MDUsImV4cCI6MjEwMjA0NTcwNX0.yzLlv6H2lLC2nZPLBOQihQ4OOTuv6zY7R4QAUccQK6o';
 
-const MALLU_HEROINES = ['Aishwarya Lekshmi', 'Nithya Menen', 'Iswarya Menon', 'Mamitha Baiju', 'Anagha'];
-
-const COMMENTARY = {
-  // Champion kept 3+ times in a row
-  loyalty: [
-    { text: "Un Viswasam Gunaavu ka? 😤 Intha ponnu mattum thaan aa?", sub: "", icon: "🤨" },
-  ],
-
-  // Switched champion 2+ times in a row
-  switching: [
-    { text: "Manasa Alai Paaya Vidaadhinga Boss! 🌊 Oru mudivukku vanga!", sub: "", icon: "💨" },
-  ],
-
-  // Mallu heroine wins
-  mallu: [
-    { text: "Straight ah Mallu dha venumo, Bloody Rascal 😂", sub: "", icon: "🌴" },
-  ],
-
-  // First round
-  start: [
-    { text: "Ready ah da Parama 🔥", sub: "", icon: "🎬" },
-  ],
-
-  // Every 3rd round
-  random: [
-    { text: "Parama choose panra 👀", sub: "", icon: "🎭" },
-  ],
-
-  // Hovering too long on one card (3s+)
-  thinking: [
-    { text: "Nalla Yosichu Thappana Mudiva edu 🤔", sub: "", icon: "🧠" },
-  ],
-
-  // End card — dominant winner (80%+)
-  dominant: "Purnjkte uun Viswasam Guna vuku dha 💯",
-
-  // Final sign-off shown to everyone after result
-  signoff: "Congrats, Chitraguptan has taken very good note, now let's meet in hell 😈",
-  footer:  "Thanks for prioritizing my game over your Planner Board. Now pls go before you get one more Teams Ping 🏃"
+const sbHeaders = {
+  'Content-Type': 'application/json',
+  'apikey': SB_KEY,
+  'Authorization': `Bearer ${SB_KEY}`
 };
 
-// Track game patterns
-let switchCount   = 0;
-let keepCount     = 0;
-let hoverTimer    = null;
-let hoverFired    = false;
-
-function startHoverTimer() {
-  clearHoverTimer();
-  hoverFired = false;
-  hoverTimer = setTimeout(() => {
-    if (!hoverFired && !picking) {
-      hoverFired = true;
-      showToast(pick_random(COMMENTARY.thinking));
-    }
-  }, 3000);
+async function sbInsert(row) {
+  const res = await fetch(`${SB_URL}/rest/v1/results`, {
+    method: 'POST',
+    headers: { ...sbHeaders, 'Prefer': 'return=minimal' },
+    body: JSON.stringify(row)
+  });
+  return res.ok;
 }
 
-function clearHoverTimer() {
-  if (hoverTimer) { clearTimeout(hoverTimer); hoverTimer = null; }
+async function sbFetch(catKey) {
+  const filter = catKey ? `&category_key=eq.${encodeURIComponent(catKey)}` : '';
+  const res = await fetch(
+    `${SB_URL}/rest/v1/results?select=*&order=created_at.desc&limit=200${filter}`,
+    { headers: sbHeaders }
+  );
+  if (!res.ok) return [];
+  return res.json();
 }
 
-function getCommentary(winnerItem, side, catKey) {
-  // First round
-  if (round === 1) return pick_random(COMMENTARY.start);
+async function sbDelete() {
+  // Only deletes current user's results (by username stored locally)
+  const name = getUsername();
+  if (!name) return;
+  await fetch(`${SB_URL}/rest/v1/results?username=eq.${encodeURIComponent(name)}`, {
+    method: 'DELETE', headers: sbHeaders
+  });
+}
 
-  // Mallu heroine wins (heroines only)
-  if (catKey === 'heroines' && side === 'right' && MALLU_HEROINES.includes(winnerItem.name)) {
-    return pick_random(COMMENTARY.mallu);
+// ═══════════════════════════════════════════
+//  USERNAME
+// ═══════════════════════════════════════════
+const USERNAME_KEY = 'tot_username';
+
+function getUsername() { return localStorage.getItem(USERNAME_KEY) || ''; }
+
+function saveUsername() {
+  const input = document.getElementById('username-input');
+  const name = (input.value || '').trim();
+  if (!name) { input.style.borderColor = '#ff3e6c'; input.focus(); return; }
+  localStorage.setItem(USERNAME_KEY, name);
+  document.getElementById('username-modal').classList.add('hidden');
+  document.getElementById('welcome-name').textContent = name;
+  input.style.borderColor = '';
+}
+
+function initUsername() {
+  const name = getUsername();
+  if (!name) {
+    document.getElementById('username-modal').classList.remove('hidden');
+    document.getElementById('username-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') saveUsername();
+    });
+  } else {
+    document.getElementById('username-modal').classList.add('hidden');
+    document.getElementById('welcome-name').textContent = name;
   }
+}
 
-  // Champion kept
-  if (side === 'left') {
-    keepCount++; switchCount = 0;
-    if (keepCount >= 3) return pick_random(COMMENTARY.loyalty);
-  }
+// ═══════════════════════════════════════════
+//  TAMIL COMMENTARY
+// ═══════════════════════════════════════════
+const MALLU_HEROINES = ['Aishwarya Lekshmi','Nithya Menen','Iswarya Menon','Mamitha Baiju','Anagha'];
 
-  // Switched to challenger
-  if (side === 'right') {
-    switchCount++; keepCount = 0;
-    if (switchCount >= 2) return pick_random(COMMENTARY.switching);
-  }
+const COMMENTARY = {
+  loyalty:  [{ text:"Un Viswasam Gunaavu ka? 😤 Intha ponnu mattum thaan aa?", icon:"🤨" }],
+  switching:[{ text:"Manasa Alai Paaya Vidaadhinga Boss! 🌊 Oru mudivukku vanga!", icon:"💨" }],
+  mallu:    [{ text:"Straight ah Mallu dha venumo, Bloody Rascal 😂", icon:"🌴" }],
+  start:    [{ text:"Ready ah da Parama 🔥", icon:"🎬" }],
+  random:   [{ text:"Parama choose panra 👀", icon:"🎭" }],
+  thinking: [{ text:"Nalla Yosichu Thappana Mudiva edu 🤔", icon:"🧠" }],
+  dominant: "Purnjkte uun Viswasam Guna vuku dha 💯",
+  signoff:  "Congrats, Chitraguptan has taken very good note, now let's meet in hell 😈"
+};
 
-  // Random every 3rd round
-  if (round % 3 === 0) return pick_random(COMMENTARY.random);
+let switchCount=0,keepCount=0,hoverTimer=null,hoverFired=false;
 
+function startHoverTimer(){
+  clearHoverTimer(); hoverFired=false;
+  hoverTimer=setTimeout(()=>{ if(!hoverFired&&!picking){hoverFired=true;showToast(rnd(COMMENTARY.thinking))} },3000);
+}
+function clearHoverTimer(){ if(hoverTimer){clearTimeout(hoverTimer);hoverTimer=null} }
+function rnd(arr){ return arr[Math.floor(Math.random()*arr.length)] }
+
+function getCommentary(winnerItem, side, catKey){
+  if(round===1) return rnd(COMMENTARY.start);
+  if(catKey==='heroines'&&side==='right'&&MALLU_HEROINES.includes(winnerItem.name)) return rnd(COMMENTARY.mallu);
+  if(side==='left'){ keepCount++;switchCount=0; if(keepCount>=3) return rnd(COMMENTARY.loyalty) }
+  if(side==='right'){ switchCount++;keepCount=0; if(switchCount>=2) return rnd(COMMENTARY.switching) }
+  if(round%3===0) return rnd(COMMENTARY.random);
   return null;
 }
 
-function pick_random(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+function showToast(c){
+  const t=document.getElementById('tamil-toast');
+  if(!c){t.classList.remove('visible');return}
+  document.getElementById('tamil-icon').textContent=c.icon||'🎭';
+  document.getElementById('tamil-text').textContent=c.text;
+  t.classList.remove('visible'); void t.offsetWidth;
+  t.classList.add('visible','toast-bounce');
+  setTimeout(()=>t.classList.remove('toast-bounce'),400);
 }
 
-function showToast(commentary) {
-  const toast = document.getElementById('tamil-toast');
-  if (!commentary) {
-    toast.classList.remove('visible');
-    return;
-  }
-  document.getElementById('tamil-icon').textContent = commentary.icon || '🎭';
-  document.getElementById('tamil-text').textContent = commentary.text;
-  document.getElementById('tamil-sub').textContent  = commentary.sub || '';
-  toast.classList.remove('visible');
-  void toast.offsetWidth;
-  toast.classList.add('visible');
-  toast.classList.add('toast-bounce');
-  setTimeout(() => toast.classList.remove('toast-bounce'), 400);
-}
+// ═══════════════════════════════════════════
+//  TMDB — Tamil Directors
+// ═══════════════════════════════════════════
+const TMDB_KEY='07c5c9efa2102d78d6f2197475f4c8d7';
+const TMDB_IMG='https://image.tmdb.org/t/p/w500';
+const TMDB_BASE='https://api.themoviedb.org/3';
 
-
-
-// ════════════════════════════════════════════
-//  TMDB
-// ════════════════════════════════════════════
-const TMDB_KEY  = '07c5c9efa2102d78d6f2197475f4c8d7';
-const TMDB_IMG  = 'https://image.tmdb.org/t/p/w500';
-const TMDB_BASE = 'https://api.themoviedb.org/3';
-
-// Tamil directors — TMDb person IDs confirmed
-// Fetched live so photos always up to date
-const TAMIL_DIRECTORS_RAW = [
-  { name: 'Mani Ratnam',         query: 'Mani Ratnam',         meta: 'Roja · Bombay · Ponniyin Selvan',  emoji: '🎥' },
-  { name: 'Shankar',             query: 'Shankar',             meta: 'Enthiran · 2.0 · Indian 2',        emoji: '🤖' },
-  { name: 'Lokesh Kanagaraj',    query: 'Lokesh Kanagaraj',    meta: 'Vikram · Kaithi · Leo',            emoji: '🔫' },
-  { name: 'Vetrimaaran',         query: 'Vetrimaaran',         meta: 'Vada Chennai · Aadukalam',         emoji: '🏆' },
-  { name: 'Pa. Ranjith',         query: 'Pa. Ranjith',         meta: 'Kabali · Kaala · Sarpatta',       emoji: '✊' },
-  { name: 'Selvaraghavan',       query: 'Selvaraghavan',       meta: 'Kadhal Kondein · Aayirathil',      emoji: '🌀' },
-  { name: 'Karthik Subbaraj',    query: 'Karthik Subbaraj',    meta: 'Jigarthanda · Mercury · Iraivi',   emoji: '🎭' },
-  { name: 'Gautham Menon',       query: 'Gautham Menon',       meta: 'Vinnaithaandi · Neethane',         emoji: '🌊' },
-  { name: 'AR Murugadoss',       query: 'A.R. Murugadoss',     meta: 'Ghajini · Thuppakki · Sarkar',     emoji: '💥' },
-  { name: 'Atlee',               query: 'Atlee Kumar',         meta: 'Theri · Mersal · Bigil',           emoji: '⚡' },
-  { name: 'Nithilan Swaminathan',query: 'Nithilan Swaminathan',meta: 'Maharaja · Kurangu Bommai',        emoji: '🎯' },
-  { name: 'Arun Matheswaran',    query: 'Arun Matheswaran',    meta: 'Rocky · Captain Miller',           emoji: '🔥' },
+const TAMIL_DIRECTORS_RAW=[
+  {name:'Mani Ratnam',       query:'Mani Ratnam',         meta:'Roja · Bombay · Ponniyin Selvan', emoji:'🎥'},
+  {name:'Shankar',           query:'Shankar',             meta:'Enthiran · 2.0 · Indian 2',       emoji:'🤖'},
+  {name:'Lokesh Kanagaraj',  query:'Lokesh Kanagaraj',    meta:'Vikram · Kaithi · Leo',           emoji:'🔫'},
+  {name:'Vetrimaaran',       query:'Vetrimaaran',         meta:'Vada Chennai · Aadukalam',        emoji:'🏆'},
+  {name:'Pa. Ranjith',       query:'Pa. Ranjith',         meta:'Kabali · Kaala · Sarpatta',      emoji:'✊'},
+  {name:'Selvaraghavan',     query:'Selvaraghavan',       meta:'Kadhal Kondein · Aayirathil',     emoji:'🌀'},
+  {name:'Karthik Subbaraj',  query:'Karthik Subbaraj',    meta:'Jigarthanda · Mercury · Iraivi',  emoji:'🎭'},
+  {name:'Gautham Menon',     query:'Gautham Menon',       meta:'Vinnaithaandi · Neethane',        emoji:'🌊'},
+  {name:'AR Murugadoss',     query:'A.R. Murugadoss',     meta:'Ghajini · Thuppakki · Sarkar',    emoji:'💥'},
+  {name:'Atlee',             query:'Atlee Kumar',         meta:'Theri · Mersal · Bigil',          emoji:'⚡'},
+  {name:'Nithilan Swaminathan',query:'Nithilan Swaminathan',meta:'Maharaja · Kurangu Bommai',    emoji:'🎯'},
+  {name:'Arun Matheswaran',  query:'Arun Matheswaran',    meta:'Rocky · Captain Miller',          emoji:'🔥'},
 ];
 
-async function fetchDirectorPhoto(query) {
-  try {
-    const encoded = encodeURIComponent(query);
-    const res  = await fetch(`${TMDB_BASE}/search/person?api_key=${TMDB_KEY}&query=${encoded}`);
-    const data = await res.json();
-    const hit  = data.results && data.results[0];
-    return hit && hit.profile_path ? TMDB_IMG + hit.profile_path : null;
-  } catch { return null; }
+async function fetchDirectorPhoto(query){
+  try{
+    const res=await fetch(`${TMDB_BASE}/search/person?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}`);
+    const data=await res.json();
+    const hit=data.results&&data.results[0];
+    return hit&&hit.profile_path?TMDB_IMG+hit.profile_path:null;
+  }catch{return null}
 }
 
-async function buildDirectorsCategory() {
-  const items = [];
-  for (const d of TAMIL_DIRECTORS_RAW) {
-    const photo = await fetchDirectorPhoto(d.query);
-    items.push({ name: d.name, meta: d.meta, emoji: d.emoji, img: photo || '' });
+async function buildDirectorsCategory(){
+  const items=[];
+  for(const d of TAMIL_DIRECTORS_RAW){
+    const photo=await fetchDirectorPhoto(d.query);
+    items.push({name:d.name,meta:d.meta,emoji:d.emoji,img:photo||''});
   }
-  CATEGORIES['directors'] = {
-    name: 'Tamil Directors',
-    emoji: '🎬',
-    items
-  };
-  const countEl = document.getElementById('directors-count');
-  if (countEl) countEl.textContent = `${items.length} directors`;
+  CATEGORIES['directors']={name:'Tamil Directors',emoji:'🎬',items};
+  const el=document.getElementById('directors-count');
+  if(el) el.textContent=`${items.length} directors`;
 }
 
-// ════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  DATA
-// ════════════════════════════════════════════
-const CATEGORIES = {
-  heroines: {
-    name: 'South Indian Heroines',
-    emoji: '💃',
-    items: [
-      { name: 'Aishwarya Lekshmi',   meta: 'Malayalam · Tamil',          emoji: '🌸', img: 'Aishwarya Lekshmi.avif'  },
-      { name: 'Aishwarya Rajesh',    meta: 'Tamil',                      emoji: '🎭', img: 'Aishwarya Rajesh.webp'   },
-      { name: 'Anagha',              meta: 'Malayalam · Tamil',          emoji: '✨', img: 'Anagha.jfif'             },
-      { name: 'Anupama',             meta: 'Tamil · Telugu',             emoji: '🌟', img: 'Anupama.jpg'             },
-      { name: 'Anushka Shetty',      meta: 'Telugu · Tamil',             emoji: '👑', img: 'Anushka Shetty.jpg'     },
-      { name: 'Asin',                meta: 'Tamil · Hindi',              emoji: '💫', img: 'Asin.jpg'               },
-      { name: 'Iswarya Menon',       meta: 'Tamil',                      emoji: '🌺', img: 'Iswarya Menon.webp'     },
-      { name: 'Kajal Agarwal',       meta: 'Telugu · Tamil · Hindi',    emoji: '💎', img: 'Kajal Agarwal.png'      },
-      { name: 'Kayadu Lohar',        meta: 'Tamil',                      emoji: '🌙', img: 'Kayadu Lohar.jpg'       },
-      { name: 'Keerthy Suresh',      meta: 'Tamil · Telugu · Malayalam', emoji: '⭐', img: 'Keerthy Suresh.jpg'    },
-      { name: 'Ketika Sharma',       meta: 'Telugu · Hindi',             emoji: '🔥', img: 'Ketika.jfif'           },
-      { name: 'Malavika Mohanan',    meta: 'Tamil · Hindi · Malayalam',  emoji: '🦋', img: 'Malavika Mohanan.webp' },
-      { name: 'Mamitha Baiju',       meta: 'Malayalam',                  emoji: '🌻', img: 'Mamitha Baiju.jfif'    },
-      { name: 'Meenakshi Chaudhary', meta: 'Telugu · Hindi',             emoji: '💡', img: 'Meenakshi Chaudry.png' },
-      { name: 'Mrunal Thakur',       meta: 'Hindi · Telugu · Tamil',    emoji: '🎀', img: 'Mrunal Thakur.jpg'     },
-      { name: 'Nithya Menen',        meta: 'Malayalam · Tamil · Telugu', emoji: '🌊', img: 'Nitya Menon.jfif'      },
-      { name: 'Pooja Hegde',         meta: 'Telugu · Tamil · Hindi',    emoji: '🌈', img: 'Pooja Hegde.jfif'      },
-      { name: 'Preity Mukundhan',    meta: 'Tamil',                      emoji: '🌷', img: 'Preity Mukundhan.png'  },
-      { name: 'Priya Anand',         meta: 'Tamil · Telugu',             emoji: '🎵', img: 'Priya Anand.jfif'      },
-      { name: 'Priyamani',           meta: 'Telugu · Tamil · Kannada',   emoji: '🎬', img: 'Priyamani.png'         },
-      { name: 'Rashmika Mandanna',   meta: 'Telugu · Kannada · Hindi',   emoji: '😊', img: 'Rashmika.jfif'         },
-      { name: 'Saanve Megghana',     meta: 'Telugu',                     emoji: '🌿', img: 'Saanve.jfif'           },
-      { name: 'Samantha',            meta: 'Telugu · Tamil',             emoji: '💪', img: 'Samantha.webp'         },
-      { name: 'Samyuktha',           meta: 'Tamil · Telugu',             emoji: '🎭', img: 'Samyuktha.jfif'        },
-      { name: 'Shobita Dhulipala',   meta: 'Telugu · Tamil · Hindi',    emoji: '🏆', img: 'Shobitha.webp'         },
-      { name: 'Shriya Saran',        meta: 'Telugu · Tamil · Hindi',    emoji: '💃', img: 'Shriya.jfif'           },
-      { name: 'Sree Leela',          meta: 'Telugu',                     emoji: '⚡', img: 'Sree Leela.jpg'        },
-      { name: 'Trisha',              meta: 'Tamil · Telugu',             emoji: '👸', img: 'Trisha.jfif'           },
+// ═══════════════════════════════════════════
+const CATEGORIES={
+  heroines:{
+    name:'South Indian Heroines', emoji:'💃',
+    items:[
+      {name:'Aishwarya Lekshmi',  meta:'Malayalam · Tamil',          emoji:'🌸',img:'Aishwarya Lekshmi.avif'},
+      {name:'Aishwarya Rajesh',   meta:'Tamil',                      emoji:'🎭',img:'Aishwarya Rajesh.webp'},
+      {name:'Anagha',             meta:'Malayalam · Tamil',          emoji:'✨',img:'Anagha.jfif'},
+      {name:'Anupama',            meta:'Tamil · Telugu',             emoji:'🌟',img:'Anupama.jpg'},
+      {name:'Anushka Shetty',     meta:'Telugu · Tamil',             emoji:'👑',img:'Anushka Shetty.jpg'},
+      {name:'Asin',               meta:'Tamil · Hindi',              emoji:'💫',img:'Asin.jpg'},
+      {name:'Iswarya Menon',      meta:'Tamil',                      emoji:'🌺',img:'Iswarya Menon.webp'},
+      {name:'Kajal Agarwal',      meta:'Telugu · Tamil · Hindi',     emoji:'💎',img:'Kajal Agarwal.png'},
+      {name:'Kayadu Lohar',       meta:'Tamil',                      emoji:'🌙',img:'Kayadu Lohar.jpg'},
+      {name:'Keerthy Suresh',     meta:'Tamil · Telugu · Malayalam', emoji:'⭐',img:'Keerthy Suresh.jpg'},
+      {name:'Ketika Sharma',      meta:'Telugu · Hindi',             emoji:'🔥',img:'Ketika.jfif'},
+      {name:'Malavika Mohanan',   meta:'Tamil · Hindi · Malayalam',  emoji:'🦋',img:'Malavika Mohanan.webp'},
+      {name:'Mamitha Baiju',      meta:'Malayalam',                  emoji:'🌻',img:'Mamitha Baiju.jfif'},
+      {name:'Meenakshi Chaudhary',meta:'Telugu · Hindi',             emoji:'💡',img:'Meenakshi Chaudry.png'},
+      {name:'Mrunal Thakur',      meta:'Hindi · Telugu · Tamil',     emoji:'🎀',img:'Mrunal Thakur.jpg'},
+      {name:'Nithya Menen',       meta:'Malayalam · Tamil · Telugu', emoji:'🌊',img:'Nitya Menon.jfif'},
+      {name:'Pooja Hegde',        meta:'Telugu · Tamil · Hindi',     emoji:'🌈',img:'Pooja Hegde.jfif'},
+      {name:'Preity Mukundhan',   meta:'Tamil',                      emoji:'🌷',img:'Preity Mukundhan.png'},
+      {name:'Priya Anand',        meta:'Tamil · Telugu',             emoji:'🎵',img:'Priya Anand.jfif'},
+      {name:'Priyamani',          meta:'Telugu · Tamil · Kannada',   emoji:'🎬',img:'Priyamani.png'},
+      {name:'Rashmika Mandanna',  meta:'Telugu · Kannada · Hindi',   emoji:'😊',img:'Rashmika.jfif'},
+      {name:'Saanve Megghana',    meta:'Telugu',                     emoji:'🌿',img:'Saanve.jfif'},
+      {name:'Samantha',           meta:'Telugu · Tamil',             emoji:'💪',img:'Samantha.webp'},
+      {name:'Samyuktha',          meta:'Tamil · Telugu',             emoji:'🎭',img:'Samyuktha.jfif'},
+      {name:'Shobita Dhulipala',  meta:'Telugu · Tamil · Hindi',     emoji:'🏆',img:'Shobitha.webp'},
+      {name:'Shriya Saran',       meta:'Telugu · Tamil · Hindi',     emoji:'💃',img:'Shriya.jfif'},
+      {name:'Sree Leela',         meta:'Telugu',                     emoji:'⚡',img:'Sree Leela.jpg'},
+      {name:'Trisha',             meta:'Tamil · Telugu',             emoji:'👸',img:'Trisha.jfif'},
     ]
   },
-  directors: { name: 'Tamil Directors', emoji: '🎬', items: [] } // filled by buildDirectorsCategory()
+  directors:{name:'Tamil Directors',emoji:'🎬',items:[]}
 };
 
-// ════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  STATE
-// ════════════════════════════════════════════
-let cat, catKey, deck, champion, championWins, round, total, defeated, picking, currentTier;
+// ═══════════════════════════════════════════
+let cat,catKey,deck,champion,championWins,round,total,defeated,picking,currentTier;
+const TIER_NAMES={1:'Quick Swipe',2:'In For A Game',3:"Let's See Who's Absolute Best"};
+const TIER_SIZES={1:{min:8,max:10},2:{min:15,max:20},3:{min:null,max:null}};
+let pendingCatKey=null;
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
   return a;
 }
 
-// ════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  NAV
-// ════════════════════════════════════════════
-function show(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+// ═══════════════════════════════════════════
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
-function goHome() { show('home'); }
+function goHome(){show('home')}
 
-// ════════════════════════════════════════════
-//  TIER PICKER
-// ════════════════════════════════════════════
-
-// Tier sizes — randomly chosen within range each game for variety
-const TIER_SIZES = {
-  1: { min: 8,  max: 10 },   // Therndhedukkapatta Marumagals — ~9 picks
-  2: { min: 15, max: 20 },   // Same Clan — ~19 picks
-  3: { min: null, max: null } // Broad Mind Prospects — full roster
-};
-
-let pendingCatKey = null;
-
-function pickTier(key) {
-  pendingCatKey = key;
-  const c = CATEGORIES[key];
-  document.getElementById('tier-cat-emoji').textContent = c.emoji;
-  document.getElementById('tier-cat-name').textContent  = c.name;
+// ═══════════════════════════════════════════
+//  TIER
+// ═══════════════════════════════════════════
+function pickTier(key){
+  if(!getUsername()){initUsername();return}
+  pendingCatKey=key;
+  const c=CATEGORIES[key];
+  document.getElementById('tier-cat-emoji').textContent=c.emoji;
+  document.getElementById('tier-cat-name').textContent=c.name;
   show('tier-pick');
 }
 
-function startGameWithTier(tier) {
-  const key = pendingCatKey;
-  const allItems = CATEGORIES[key].items;
-  const { min, max } = TIER_SIZES[tier];
-
-  let size;
-  if (max === null) {
-    size = allItems.length; // full roster
-  } else {
-    size = Math.floor(Math.random() * (max - min + 1)) + min;
-    size = Math.min(size, allItems.length); // can't exceed what exists
-  }
-
-  currentTier = tier;
-  startGame(key, size);
+function startGameWithTier(tier){
+  const key=pendingCatKey;
+  const allItems=CATEGORIES[key].items;
+  const{min,max}=TIER_SIZES[tier];
+  let size=max===null?allItems.length:Math.min(Math.floor(Math.random()*(max-min+1))+min,allItems.length);
+  currentTier=tier;
+  startGame(key,size);
 }
 
-// ════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  GAME
-// ════════════════════════════════════════════
-function startGame(key, size) {
-  catKey       = key;
-  cat          = CATEGORIES[key];
-  const shuffled = shuffle([...cat.items]);
-  const picked   = size ? shuffled.slice(0, size) : shuffled; // trim to tier size
-  deck         = shuffle([...picked]); // re-shuffle the subset
-  champion     = deck.pop();
-  championWins = 0;
-  defeated     = [];
-  round        = 0;
-  total        = picked.length;
-  picking      = false;
-  switchCount  = 0;
-  keepCount    = 0;
-
-  document.getElementById('game-cat-label').textContent = cat.name;
+// ═══════════════════════════════════════════
+function startGame(key,size){
+  catKey=key; cat=CATEGORIES[key];
+  const shuffled=shuffle([...cat.items]);
+  const picked=size?shuffled.slice(0,size):shuffled;
+  deck=shuffle([...picked]);
+  champion=deck.pop(); championWins=0; defeated=[]; round=0;
+  total=picked.length; picking=false; switchCount=0; keepCount=0;
+  document.getElementById('game-cat-label').textContent=cat.name;
   document.getElementById('tamil-toast').classList.remove('visible');
-  show('game');
-  nextRound();
+  show('game'); nextRound();
 }
 
-function nextRound() {
-  if (!deck.length) { showResult(); return; }
-  const challenger = deck.pop();
-  round++;
-
-  const pct = ((total - deck.length - 1) / (total - 1)) * 100;
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('game-round-label').textContent = `Round ${round} of ${total - 1}`;
-  document.getElementById('streak-count').textContent = championWins;
-
-  setCard('left',  champion,   true,  championWins);
-  setCard('right', challenger, false, 0);
-
-  // animate challenger
-  const rc = document.getElementById('card-right');
-  rc.classList.remove('slide-in');
-  void rc.offsetWidth;
-  rc.classList.add('slide-in');
-
-  document.getElementById('card-right')._item = challenger;
-  document.getElementById('card-left')._item  = champion;
-
-  // Hover timer — fires if player stares too long at one card
-  ['card-left','card-right'].forEach(id => {
-    const el = document.getElementById(id);
-    el.onmouseenter = () => startHoverTimer();
-    el.onmouseleave = () => clearHoverTimer();
-    el.ontouchstart = () => startHoverTimer();
+function nextRound(){
+  if(!deck.length){showResult();return}
+  const challenger=deck.pop(); round++;
+  const pct=((total-deck.length-1)/(total-1))*100;
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('game-round-label').textContent=`Round ${round} of ${total-1}`;
+  document.getElementById('streak-count').textContent=championWins;
+  setCard('left',champion,true,championWins);
+  setCard('right',challenger,false,0);
+  const rc=document.getElementById('card-right');
+  rc.classList.remove('slide-in'); void rc.offsetWidth; rc.classList.add('slide-in');
+  document.getElementById('card-right')._item=challenger;
+  document.getElementById('card-left')._item=champion;
+  ['card-left','card-right'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.onmouseenter=()=>startHoverTimer();
+    el.onmouseleave=()=>clearHoverTimer();
+    el.ontouchstart=()=>startHoverTimer();
   });
-
-  // First round toast
-  if (round === 1) showToast(pick_random(COMMENTARY.start));
+  if(round===1) showToast(rnd(COMMENTARY.start));
 }
 
-function loadImg(imgEl, phEl, phEmojiEl, phNameEl, item) {
-  imgEl.style.display = 'none';
-  phEl.style.display  = 'flex';
-  phEmojiEl.textContent = item.emoji || '⭐';
-  if (phNameEl) phNameEl.textContent = item.name;
-  imgEl.onload  = () => { imgEl.style.display = 'block'; phEl.style.display = 'none'; };
-  imgEl.onerror = () => { imgEl.style.display = 'none'; phEl.style.display = 'flex'; };
-  imgEl.src = ''; 
-  setTimeout(() => { imgEl.src = item.img; imgEl.alt = item.name; }, 10);
+function loadImg(imgEl,phEl,phEmojiEl,phNameEl,item){
+  imgEl.style.display='none'; phEl.style.display='flex';
+  phEmojiEl.textContent=item.emoji||'⭐';
+  if(phNameEl) phNameEl.textContent=item.name;
+  imgEl.onload=()=>{imgEl.style.display='block';phEl.style.display='none'};
+  imgEl.onerror=()=>{imgEl.style.display='none';phEl.style.display='flex'};
+  imgEl.src=''; setTimeout(()=>{imgEl.src=item.img;imgEl.alt=item.name},10);
 }
 
-function setCard(side, item, isChamp, wins) {
-  loadImg(
-    document.getElementById(`${side}-img`),
-    document.getElementById(`${side}-ph`),
-    document.getElementById(`${side}-ph-emoji`),
-    document.getElementById(`${side}-ph-name`),
-    item
-  );
-  document.getElementById(`${side}-name`).textContent = item.name;
-  document.getElementById(`${side}-meta`).textContent = item.meta;
-  if (side === 'left') {
-    const wEl  = document.getElementById('left-wins');
-    const crown= document.getElementById('left-crown');
-    if (wins > 0) {
-      wEl.style.display = 'inline-flex';
-      document.getElementById('left-wins-n').textContent = wins;
-      crown.style.display = 'block';
-    } else {
-      wEl.style.display = crown.style.display = 'none';
-    }
+function setCard(side,item,isChamp,wins){
+  loadImg(document.getElementById(`${side}-img`),document.getElementById(`${side}-ph`),document.getElementById(`${side}-ph-emoji`),document.getElementById(`${side}-ph-name`),item);
+  document.getElementById(`${side}-name`).textContent=item.name;
+  document.getElementById(`${side}-meta`).textContent=item.meta;
+  if(side==='left'){
+    const wEl=document.getElementById('left-wins'),crown=document.getElementById('left-crown');
+    if(wins>0){wEl.style.display='inline-flex';document.getElementById('left-wins-n').textContent=wins;crown.style.display='block'}
+    else{wEl.style.display=crown.style.display='none'}
   }
-  document.getElementById(`card-${side}`).classList.remove('chosen', 'rejected');
+  document.getElementById(`card-${side}`).classList.remove('chosen','rejected');
 }
 
-function pick(side) {
-  if (picking) return;
-  picking = true;
-
-  const winnerItem = document.getElementById(`card-${side}`)._item;
-  const loserItem  = document.getElementById(`card-${side === 'left' ? 'right' : 'left'}`)._item;
-
+function pick(side){
+  if(picking) return; picking=true;
+  const winnerItem=document.getElementById(`card-${side}`)._item;
+  const loserItem=document.getElementById(`card-${side==='left'?'right':'left'}`)._item;
   document.getElementById(`card-${side}`).classList.add('chosen');
-  document.getElementById(`card-${side === 'left' ? 'right' : 'left'}`).classList.add('rejected');
+  document.getElementById(`card-${side==='left'?'right':'left'}`).classList.add('rejected');
   defeated.push(loserItem);
-
-  // Clear hover timer, show pick commentary
   clearHoverTimer();
-  const commentary = getCommentary(winnerItem, side, catKey);
-  showToast(commentary);
-
-  setTimeout(() => {
-    if (side === 'right') { champion = winnerItem; championWins = 1; }
-    else { championWins++; }
-    picking = false;
-    nextRound();
-  }, 430);
+  showToast(getCommentary(winnerItem,side,catKey));
+  setTimeout(()=>{
+    if(side==='right'){champion=winnerItem;championWins=1}else{championWins++}
+    picking=false; nextRound();
+  },430);
 }
 
-// ════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  RESULT
-// ════════════════════════════════════════════
-function showResult() {
+// ═══════════════════════════════════════════
+function showResult(){
   show('result');
+  loadImg(document.getElementById('winner-img'),document.getElementById('winner-ph'),document.getElementById('winner-ph-emoji'),null,champion);
+  const tierName=TIER_NAMES[currentTier]||'';
+  document.getElementById('winner-name').textContent=champion.name;
+  document.getElementById('winner-sub').textContent=`Survived ${championWins} challenge${championWins!==1?'s':''} · ${tierName}`;
+  document.getElementById('result-headline').textContent=`${champion.name} wins! 🏆`;
+  const rarityPct=Math.round((championWins/(total-1))*100);
+  const dom=document.getElementById('dominant-banner');
+  if(rarityPct>=80){dom.textContent=COMMENTARY.dominant;dom.style.display='block'}
+  else dom.style.display='none';
+}
 
-  loadImg(
-    document.getElementById('winner-img'),
-    document.getElementById('winner-ph'),
-    document.getElementById('winner-ph-emoji'),
-    null, champion
-  );
+// ═══════════════════════════════════════════
+//  SAVE & SHARE
+// ═══════════════════════════════════════════
+async function submitAndShare(){
+  const username=getUsername();
+  if(!username){initUsername();return}
 
-  const tierNames = { 1: 'Therndhedukkapatta Marumagals', 2: 'Same Clan', 3: 'Broad Mind Prospects' };
-  const tierName  = tierNames[currentTier] || '';
-  document.getElementById('winner-name').textContent = champion.name;
-  document.getElementById('winner-sub').textContent  = `Survived ${championWins} challenge${championWins !== 1 ? 's' : ''} · ${tierName}`;
-  document.getElementById('result-headline').textContent = `${champion.name} wins! 🏆`;
+  const btn=document.querySelector('#result .btn-primary');
+  btn.textContent='💾 Saving...'; btn.disabled=true;
 
-  // Dominant banner — only if 80%+ wins
-  const rarityPct = Math.round((championWins / (total - 1)) * 100);
-  const domBanner = document.getElementById('dominant-banner');
-  if (rarityPct >= 80) {
-    domBanner.textContent = COMMENTARY.dominant;
-    domBanner.style.display = 'block';
-  } else {
-    domBanner.style.display = 'none';
+  const row={
+    username,
+    category:cat.name,
+    category_key:catKey,
+    winner:champion.name,
+    winner_img:champion.img||'',
+    winner_emoji:champion.emoji||'⭐',
+    wins:championWins,
+    total,
+    tier:currentTier,
+    tier_name:TIER_NAMES[currentTier]||''
+  };
+
+  const ok=await sbInsert(row);
+
+  if(ok){
+    btn.textContent='✅ Saved!';
+    btn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';
+  }else{
+    btn.textContent='⚠️ Save failed';
+    btn.style.background='linear-gradient(135deg,#ef4444,#dc2626)';
   }
+  setTimeout(()=>{btn.textContent='💾 Save & Share Result';btn.style.background='';btn.disabled=false},2500);
+
+  // Share
+  const txt=`🏆 This or That — ${cat.name}\n👑 ${champion.name} won for me!\n\n${COMMENTARY.signoff}\n\nPlay: https://this-or-that-game-cine.netlify.app\n#ThisOrThat`;
+  if(navigator.share) navigator.share({title:'This or That',text:txt}).catch(()=>{});
+  else if(navigator.clipboard){navigator.clipboard.writeText(txt);setTimeout(()=>alert('Result copied! Share it 🎉'),200)}
 }
 
-// ════════════════════════════════════════════
-//  LEADERBOARD (localStorage)
-// ════════════════════════════════════════════
-const LB_KEY = 'thisorthat_leaderboard_v1';
+// ═══════════════════════════════════════════
+//  LEADERBOARD
+// ═══════════════════════════════════════════
+let lbFromScreen='home';
+let lbActiveCat=null;
 
-function loadLB() {
-  try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; }
-  catch { return []; }
-}
-
-function saveLB(entries) {
-  localStorage.setItem(LB_KEY, JSON.stringify(entries));
-}
-
-function submitToLeaderboard() {
-  const nameInput = document.getElementById('player-name-input');
-  const name = (nameInput.value || '').trim();
-  if (!name) { nameInput.focus(); nameInput.style.borderColor='#ff3e6c'; return; }
-  nameInput.style.borderColor = '';
-
-  const entries = loadLB();
-  entries.unshift({
-    player:   name,
-    category: cat.name,
-    catKey:   catKey,
-    winner:   champion.name,
-    winnerImg: champion.img,
-    winnerEmoji: champion.emoji || '⭐',
-    wins:     championWins,
-    total:    total,
-    tier:     currentTier,
-    tierName: ({ 1:'Therndhedukkapatta Marumagals', 2:'Same Clan', 3:'Broad Mind Prospects' })[currentTier] || 'Full',
-    ts:       Date.now()
-  });
-  // Keep last 100
-  if (entries.length > 100) entries.splice(100);
-  saveLB(entries);
-
-  nameInput.value = '';
-  const btn = document.querySelector('.submit-btn');
-  btn.textContent = '✅ Saved!';
-  btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
-  setTimeout(() => {
-    btn.textContent = 'Save';
-    btn.style.background = '';
-  }, 2000);
-}
-
-function showLeaderboardFromHome() {
+function showLeaderboardFrom(from){
+  lbFromScreen=from;
+  document.getElementById('lb-back-btn').onclick=()=>show(lbFromScreen);
   show('leaderboard');
-  // override back button to go home
-  document.querySelector('#leaderboard .back-btn').onclick = () => show('home');
-  renderLeaderboard();
+  renderLeaderboard(lbActiveCat);
 }
 
-function showLeaderboard() {
-  show('leaderboard');
-  document.querySelector('#leaderboard .back-btn').onclick = () => show('result');
-  renderLeaderboard();
-}
+async function renderLeaderboard(filterKey){
+  const list=document.getElementById('lb-list');
+  const empty=document.getElementById('lb-empty');
+  const tabs=document.getElementById('lb-tabs');
+  list.innerHTML='<div class="lb-loading">Loading results... ⏳</div>';
+  empty.style.display='none';
 
+  let entries=[];
+  try{ entries=await sbFetch(filterKey||null) }catch{}
 
-function renderLeaderboard(filterKey) {
-  const entries = loadLB();
-  const tabs    = document.getElementById('lb-tabs');
-  const list    = document.getElementById('lb-list');
-  const empty   = document.getElementById('lb-empty');
+  // Build tabs from all entries
+  const allCats=[...new Set(entries.map(e=>e.category_key))].filter(Boolean);
+  lbActiveCat=filterKey||(allCats[0]||null);
+  const filtered=lbActiveCat?entries.filter(e=>e.category_key===lbActiveCat):entries;
 
-  // Build category tabs from existing entries
-  const cats = [...new Set(entries.map(e => e.catKey))];
-  const activeCat = filterKey || cats[0] || null;
-
-  tabs.innerHTML = '';
-  if (cats.length > 1) {
-    cats.forEach(k => {
-      const t = document.createElement('button');
-      t.className = 'lb-tab' + (k === activeCat ? ' active' : '');
-      t.textContent = CATEGORIES[k] ? CATEGORIES[k].name : k;
-      t.onclick = () => renderLeaderboard(k);
+  tabs.innerHTML='';
+  if(allCats.length>1){
+    allCats.forEach(k=>{
+      const t=document.createElement('button');
+      t.className='lb-tab'+(k===lbActiveCat?' active':'');
+      t.textContent=CATEGORIES[k]?CATEGORIES[k].name:k;
+      t.onclick=()=>renderLeaderboard(k);
       tabs.appendChild(t);
     });
   }
 
-  const filtered = activeCat ? entries.filter(e => e.catKey === activeCat) : entries;
+  if(!filtered.length){list.innerHTML='';empty.style.display='block';return}
+  empty.style.display='none';
 
-  if (!filtered.length) {
-    list.innerHTML = ''; empty.style.display = 'block'; return;
-  }
-  empty.style.display = 'none';
-
-  // Tally winner counts for this category
-  const tally = {};
-  filtered.forEach(e => {
-    if (!tally[e.winner]) tally[e.winner] = { count: 0, img: e.winnerImg, emoji: e.winnerEmoji };
+  // Tally
+  const tally={};
+  filtered.forEach(e=>{
+    if(!tally[e.winner]) tally[e.winner]={count:0,img:e.winner_img,emoji:e.winner_emoji||'⭐',pickers:[]};
     tally[e.winner].count++;
+    tally[e.winner].pickers.push(e.username);
   });
+  const sorted=Object.entries(tally).sort((a,b)=>b[1].count-a[1].count);
+  const medals=['🥇','🥈','🥉'];
 
-  // Sort by most picked
-  const sorted = Object.entries(tally).sort((a,b) => b[1].count - a[1].count);
-  const medals = ['🥇','🥈','🥉'];
-
-  // Top picks summary
-  let html = `<div class="section-label" style="margin-top:0;margin-bottom:10px">Most picked by the group</div>`;
-  sorted.slice(0, 5).forEach(([name, data], i) => {
-    const pct = Math.round((data.count / filtered.length) * 100);
-    html += `
+  let html=`<div class="section-label" style="margin-top:0;margin-bottom:10px">Most picked by the group</div>`;
+  sorted.slice(0,5).forEach(([name,data],i)=>{
+    const pct=Math.round((data.count/filtered.length)*100);
+    const pickers=data.pickers.slice(0,3).join(', ')+(data.pickers.length>3?` +${data.pickers.length-3} more`:'');
+    html+=`
     <div class="lb-entry ${i===0?'top1':i===1?'top2':i===2?'top3':''}">
-      <div class="lb-rank">${medals[i] || i+1}</div>
-      <div class="lb-thumb">
-        ${data.img ? `<img src="${data.img}" alt="${name}" onerror="this.parentElement.textContent='${data.emoji}'">` : data.emoji}
-      </div>
+      <div class="lb-rank">${medals[i]||i+1}</div>
+      <div class="lb-thumb">${data.img?`<img src="${data.img}" alt="${name}" onerror="this.parentElement.textContent='${data.emoji}'">`:data.emoji}</div>
       <div class="lb-info">
         <div class="lb-winner-name">${name}</div>
-        <div class="lb-meta">Picked by ${data.count} of ${filtered.length} player${filtered.length>1?'s':''}</div>
+        <div class="lb-meta">Picked by: ${pickers}</div>
       </div>
       <div class="lb-wins-badge">${pct}%</div>
     </div>`;
   });
 
-  // Individual results
-  html += `<div class="section-label" style="margin-top:20px;margin-bottom:10px">Individual results</div>`;
-  filtered.forEach(e => {
-    const timeAgo = formatTimeAgo(e.ts);
-    html += `
+  html+=`<div class="section-label" style="margin-top:20px;margin-bottom:10px">All results</div>`;
+  filtered.forEach(e=>{
+    const ago=timeAgo(e.created_at);
+    html+=`
     <div class="lb-entry">
-      <div class="lb-thumb">
-        ${e.winnerImg ? `<img src="${e.winnerImg}" alt="${e.winner}" onerror="this.parentElement.textContent='${e.winnerEmoji}'">` : e.winnerEmoji}
-      </div>
+      <div class="lb-thumb">${e.winner_img?`<img src="${e.winner_img}" alt="${e.winner}" onerror="this.parentElement.textContent='${e.winner_emoji||'⭐'}'">`:e.winner_emoji||'⭐'}</div>
       <div class="lb-info">
-        <div class="lb-player">👤 ${e.player} · ${timeAgo}</div>
+        <div class="lb-player">👤 ${e.username} · ${ago}</div>
         <div class="lb-winner-name">${e.winner}</div>
-        <div class="lb-meta">${e.tierName || ''} · ${e.wins} wins</div>
+        <div class="lb-meta">${e.tier_name||''} · ${e.wins} wins</div>
       </div>
     </div>`;
   });
 
-  list.innerHTML = html;
+  list.innerHTML=html;
 }
 
-function formatTimeAgo(ts) {
-  const diff = Date.now() - ts;
-  const m = Math.floor(diff / 60000);
-  if (m < 1)  return 'just now';
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
+function timeAgo(ts){
+  const diff=Date.now()-new Date(ts).getTime();
+  const m=Math.floor(diff/60000);
+  if(m<1) return 'just now';
+  if(m<60) return `${m}m ago`;
+  const h=Math.floor(m/60);
+  if(h<24) return `${h}h ago`;
   return `${Math.floor(h/24)}d ago`;
 }
 
-function clearLeaderboard() {
-  if (confirm('Clear all leaderboard results?')) {
-    localStorage.removeItem(LB_KEY);
-    renderLeaderboard();
-  }
+async function clearAllResults(){
+  if(!confirm('Clear YOUR results from the leaderboard?')) return;
+  await sbDelete();
+  renderLeaderboard(lbActiveCat);
 }
 
-// ════════════════════════════════════════════
-//  SHARE
-// ════════════════════════════════════════════
-function shareResult() {
-  const txt = `🏆 My This or That result — ${cat.name}\n👑 ${champion.name} beat ${championWins} challengers!\n\n${COMMENTARY.signoff}\n\nPlay here: https://this-or-that-game-cine.netlify.app\n#ThisOrThat`;
-  if (navigator.share) {
-    navigator.share({ title: 'This or That', text: txt }).catch(() => {});
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(txt);
-    alert('Result copied! Share it anywhere 🎉');
-  }
-}
+function playAgain(){pickTier(catKey)}
 
-function playAgain() { pickTier(catKey); }
-
-// ════════════════════════════════════════════
-//  INIT — fetch directors on load
-// ════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', () => {
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  initUsername();
   buildDirectorsCategory();
+  document.getElementById('username-input').addEventListener('keydown',e=>{
+    if(e.key==='Enter') saveUsername();
+  });
 });
 </script>
 </body>
